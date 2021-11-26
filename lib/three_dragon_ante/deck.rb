@@ -2,6 +2,8 @@ require_relative './card'
 
 module ThreeDragonAnte
   class Deck
+    include Refinements::Inspection
+
     def initialize
       @deck = []
       @discarded = []
@@ -11,17 +13,21 @@ module ThreeDragonAnte
      #}
 
       [1, 2, 3, 5,  7,  9].each { |str| @deck << Card::BlackDragon.new(str)  }
-      #[1, 2, 4, 7,  9, 11].each { |str| @deck << Card::BlueDragon.new(str)   }
-      #[1, 2, 4, 5,  7,  9].each { |str| @deck << Card::BrassDragon.new(str)  }
-      #[1, 3, 6, 7,  9, 11].each { |str| @deck << Card::BronzeDragon.new(str) }
-      #[1, 3, 5, 7,  8, 10].each { |str| @deck << Card::CopperDragon.new(str) }
-      #[2, 4, 6, 9, 11, 13].each { |str| @deck << Card::GoldDragon.new(str)   }
-      #[1, 2, 4, 6,  8, 10].each { |str| @deck << Card::GreenDragon.new(str)  }
-      #[2, 3, 5, 8, 10, 12].each { |str| @deck << Card::RedDragon.new(str)    }
-      #[2, 3, 6, 8, 10, 12].each { |str| @deck << Card::SilverDragon.new(str) }
-      #[1, 2, 3, 4,  6,  8].each { |str| @deck << Card::WhiteDragon.new(str)  }
+      [1, 2, 4, 7,  9, 11].each { |str| @deck << Card::BlueDragon.new(str)   }
+      [1, 2, 4, 5,  7,  9].each { |str| @deck << Card::BrassDragon.new(str)  }
+      [1, 3, 6, 7,  9, 11].each { |str| @deck << Card::BronzeDragon.new(str) }
+      [1, 3, 5, 7,  8, 10].each { |str| @deck << Card::CopperDragon.new(str) }
+      [2, 4, 6, 9, 11, 13].each { |str| @deck << Card::GoldDragon.new(str)   }
+      [1, 2, 4, 6,  8, 10].each { |str| @deck << Card::GreenDragon.new(str)  }
+      [2, 3, 5, 8, 10, 12].each { |str| @deck << Card::RedDragon.new(str)    }
+      [2, 3, 6, 8, 10, 12].each { |str| @deck << Card::SilverDragon.new(str) }
+      [1, 2, 3, 4,  6,  8].each { |str| @deck << Card::WhiteDragon.new(str)  }
 
       @deck.shuffle!
+    end
+
+    def custom_inspection
+      " #{size} cards (#{@discarded.size} discarded)"
     end
 
     def draw!
