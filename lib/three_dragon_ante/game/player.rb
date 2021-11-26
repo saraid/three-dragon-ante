@@ -8,18 +8,28 @@ module ThreeDragonAnte
 
       def initialize(game)
         @game = game
-        @hoard = Evented::Integer.new(game) { [_1, :hoard] }
+        @hoard = Evented::Integer.new(game) { [_1, :hoard, _2] }
         @hand = Evented::SetOfCards.new(game)
       end
       attr_reader :game
+      attr_accessor :identifier
       attr_reader :hoard, :hand
 
       def current_choice
         @choice
       end
 
+      def custom_inspection
+        " #{@identifier}"
+      end
+
       def generate_choice_from_hand(&block)
-        @game << @choice = Choice.new(@hand.values, &block)
+        on_choice = proc do |choice|
+          @game << [:choose, self, choice]
+          block.call(choice)
+        end
+
+        @game << @choice = Choice.new(@hand.values, &on_choice)
       end
     end
   end

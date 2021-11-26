@@ -2,19 +2,10 @@ module ThreeDragonAnte
   class Game
     class Gambit
       class PlayerAnte
-        def initialize(card)
-          @card = card
-          @revealed = false
+        def initialize(player, card)
+          @player, @card = player, card
         end
-        attr_reader :card
-
-        def revealed?
-          @revealed
-        end
-
-        def reveal!
-          @revealed = true
-        end
+        attr_reader :player, :card
       end
     end
   end

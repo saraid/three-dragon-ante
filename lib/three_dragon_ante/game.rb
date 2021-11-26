@@ -14,7 +14,7 @@ module ThreeDragonAnte
       @players = Evented::Array.new(self) { [_1, :player] }
       @events = []
       @event_logger = Logger.new($stdout)
-      @history = []
+      @gambits = []
     end
     attr_reader :deck, :players
     attr_reader :events
@@ -33,14 +33,24 @@ module ThreeDragonAnte
       end
     end
 
+    def current_phase
+      case @current_phase
+      when Symbol, Array then @current_phase
+      when Proc then @current_phase.call
+      end
+    end
+
     def <<(event_details)
-      @events << Event.new(self, @current_phase, event_details).tap do |event|
+      @events << Event.new(self, current_phase, event_details).tap do |event|
         @event_logger.info event.to_s
       end
     end
 
     def current_gambit
-      @gambit = Gambit.new(self).tap(&@history.method(:<<)) if @gambit.nil? || @gambit.ended?
+      if @gambit.nil? || @gambit.ended?
+        @gambit = Gambit.new(self).tap(&@gambits.method(:<<))
+        @current_phase = proc { [:gambit, @gambits.size, *@gambit.current_phase] }
+      end
       @gambit
     end
   end

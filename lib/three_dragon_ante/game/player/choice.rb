@@ -19,7 +19,7 @@ module ThreeDragonAnte
         end
 
         def choose!(index)
-          @on_choice.call(@choices.index(index))
+          @on_choice.call(@choices[index])
         end
       end
     end

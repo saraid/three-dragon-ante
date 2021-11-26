@@ -18,17 +18,19 @@ module ThreeDragonAnte
 
         def describe(operation, other)
           raise NotImplementedError unless @describer
-          @describer.call(operation, other)
+          @describer.call(operation, other).concat([:new_value, @value])
         end
 
         def gain(other)
-          game << describe(:gain, other)
           @value += other
+          game << describe(:gain, other)
+          other
         end
 
         def lose(other)
-          game << describe(:lose, other)
+          difference = [other, @value].min
           @value -= other
+          difference.tap { game << describe(:lose, other) }
         end
       end
     end

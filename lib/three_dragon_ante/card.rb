@@ -12,14 +12,18 @@ module ThreeDragonAnte
       @name, @strength = name, strength
       @tags = tags
     end
-    attr_reader :name, :strength
+    attr_reader :name, :strength, :tags
 
     TAGS.each do |tag|
       define_method(:"#{tag}?") { @tags.include? tag }
     end
 
     def inspectable_attributes
-      %i( tags strength )
+      %i( strength tags )
+    end
+
+    def trigger_power!
+      raise NotImplementedError
     end
   end
 end

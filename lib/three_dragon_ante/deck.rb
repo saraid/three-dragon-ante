@@ -46,17 +46,29 @@ module ThreeDragonAnte
       @deck.size
     end
 
-    def pull_card(rank, suite)
-      @deck.find { |card| card.rank == rank && card.suite == suite }.tap do |card|
+    def pull_card(type: nil, strength: nil, tags: [])
+      conditions = []
+      conditions << proc { type === _1 } unless type.nil?
+      conditions << proc { |card| tags.all? { |tag| card.tags.include?(tag) } } unless tags.empty?
+      conditions <<
+        case strength
+        when Integer then proc { _1.strength == strength }
+        when Proc then proc { _1.strength } >> strength
+        else nil
+        end
+      conditions.compact!
+
+      @deck.find { |card| conditions.all? { |condition| condition.call(card) }}.tap do |card|
+        raise 'Could not find card' if card.nil?
         @discarded << @deck.delete(card)
         @deck.compact!
       end
     end
 
-    def stack!(rank, suite = [:Hearts, :Diamonds, :Clubs, :Spades].sample)
-      card = pull_card(rank, suite)
+    def stack!(type: nil, strength: 0, tags: [])
+      card = pull_card(type: type, strength: strength, tags: tags)
       reshuffle! if card.nil?
-      card ||= pull_card(rank, suite)
+      card ||= pull_card(type: type, strength: strength, tags: tags)
       @deck.unshift(card)
       :ok
     end
