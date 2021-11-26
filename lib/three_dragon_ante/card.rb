@@ -22,7 +22,7 @@ module ThreeDragonAnte
       %i( strength tags )
     end
 
-    def trigger_power!
+    def trigger_power!(gambit, player)
       raise NotImplementedError
     end
   end

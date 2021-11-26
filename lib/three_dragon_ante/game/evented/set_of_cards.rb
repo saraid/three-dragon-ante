@@ -4,7 +4,8 @@ module ThreeDragonAnte
       class SetOfCards < Array
         def describe(operation, other)
           raise TypeError unless Card === other
-          [operation, other.inspect]
+          context = @describer.call if @describer
+          [*context, operation, other]
         end
       end
     end

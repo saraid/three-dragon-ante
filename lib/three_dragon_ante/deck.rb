@@ -46,6 +46,10 @@ module ThreeDragonAnte
       @deck.size
     end
 
+    def peek(num)
+      @deck[0..num]
+    end
+
     def pull_card(type: nil, strength: nil, tags: [])
       conditions = []
       conditions << proc { type === _1 } unless type.nil?
@@ -65,11 +69,20 @@ module ThreeDragonAnte
       end
     end
 
-    def stack!(type: nil, strength: 0, tags: [])
+    def stack!(type: nil, strength: nil, tags: [])
       card = pull_card(type: type, strength: strength, tags: tags)
       reshuffle! if card.nil?
       card ||= pull_card(type: type, strength: strength, tags: tags)
       @deck.unshift(card)
+      :ok
+    end
+
+    def stack_set!(set)
+      reshuffle!
+      set
+        .reverse
+        .map { |conditions| pull_card(**conditions) }
+        .each { |card| @deck.unshift(card) }
       :ok
     end
   end

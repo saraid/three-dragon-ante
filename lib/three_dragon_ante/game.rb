@@ -10,6 +10,7 @@ module ThreeDragonAnte
     include Refinements::Inspection
 
     def initialize
+      @current_phase = :waiting_for_players
       @deck = Deck.new
       @players = Evented::Array.new(self) { [_1, :player] }
       @events = []

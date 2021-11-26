@@ -9,7 +9,7 @@ module ThreeDragonAnte
       def initialize(game)
         @game = game
         @hoard = Evented::Integer.new(game) { [_1, :hoard, _2] }
-        @hand = Evented::SetOfCards.new(game)
+        @hand = Evented::SetOfCards.new(game) { [:player_hand, identifier || object_id] }
       end
       attr_reader :game
       attr_accessor :identifier

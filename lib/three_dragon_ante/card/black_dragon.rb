@@ -4,6 +4,11 @@ module ThreeDragonAnte
       def initialize(strength)
         super('Black Dragon', %i( evil dragon ), strength)
       end
+
+      def trigger_power!(gambit, player)
+        cash = gambit.stakes.lose 2
+        player.hoard.gain cash
+      end
     end
   end
 end

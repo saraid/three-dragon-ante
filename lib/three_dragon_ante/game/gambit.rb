@@ -8,12 +8,13 @@ module ThreeDragonAnte
         @game = game
         @current_phase = [:ante, :choice]
         @ante = []
+        @rounds = []
         @flights = game.players.zip([]).to_h.transform_values { [] }
 
         @stakes = Evented::Integer.new(game) { [_1, :stakes, _2] }
       end
-      attr_reader :game
-      attr_reader :ante, :leader, :stakes
+      attr_reader :game, :rounds
+      attr_reader :ante, :leader, :flights, :stakes
 
       def ended?
         false
@@ -34,10 +35,14 @@ module ThreeDragonAnte
         win_stakes
       end
 
+      def over?
+        current_phase.first != :ante && (stakes.value.zero? || !@winner.ni?)
+      end
+
       def accept_ante
         players.each do |player|
           player.generate_choice_from_hand do |choice|
-            @ante << PlayerAnte.new(player, choice)
+            @ante << PlayerAnte.new(player, player.hand >> choice)
           end
         end
       end
@@ -86,7 +91,7 @@ module ThreeDragonAnte
       def current_round
         if @round.nil? || @round.ended?
           @round = Round.new(self).tap(&@rounds.method(:<<))
-          @current_phase = proc { [:round, @rounds.size, *@round.current_phase] }
+          @current_phase = proc { [:round, @rounds.size] }
         end
         @round
       end

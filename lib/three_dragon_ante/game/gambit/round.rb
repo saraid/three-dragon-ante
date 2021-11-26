@@ -12,7 +12,7 @@ module ThreeDragonAnte
           game.players.each do |player|
             player.generate_choice_from_hand do |choice|
               gambit.flights[player] << choice
-              choice.trigger_power!
+              choice.trigger_power!(gambit, player)
             end
           end
         end
