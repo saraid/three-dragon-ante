@@ -12,10 +12,8 @@ RSpec.describe ThreeDragonAnte::Card::WhiteDragon do
     { type: ThreeDragonAnte::Card::WhiteDragon },
   ] end
 
-  let(:game) { Factory.game(setup_until: [:gambit, 1, :round, 1], stacked_deck: stacked_deck) }
+  let(:game) { Factory.game(setup_until: [:gambit, 1, :round, 1, :aleph], stacked_deck: stacked_deck) }
   let(:gambit) { game.current_gambit }
-
-  before(:each) { gambit.current_round.run }
 
   context 'when triggered' do
     context 'and a mortal has been played' do
@@ -25,6 +23,7 @@ RSpec.describe ThreeDragonAnte::Card::WhiteDragon do
       end
 
       it 'should steal 3 gold from the stakes' do
+        gambit.current_round.run
         expect(game.players[1].current_choice.choices.first).to be_a ThreeDragonAnte::Card::WhiteDragon
 
         current_stakes = gambit.stakes.value
@@ -38,6 +37,7 @@ RSpec.describe ThreeDragonAnte::Card::WhiteDragon do
         end
 
         it 'should steal 1 gold and end the gambit' do
+          gambit.current_round.run
           expect(game.players[1].current_choice.choices.first).to be_a ThreeDragonAnte::Card::WhiteDragon
 
           game.players[1].current_choice.choose! 0
@@ -67,6 +67,7 @@ RSpec.describe ThreeDragonAnte::Card::WhiteDragon do
       end
 
       it 'should do nothing' do
+        gambit.current_round.run
         expect(game.players[1].current_choice.choices.first).to be_a ThreeDragonAnte::Card::WhiteDragon
 
         current_stakes = gambit.stakes.value

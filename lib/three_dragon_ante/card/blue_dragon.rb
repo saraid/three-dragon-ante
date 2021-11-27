@@ -6,7 +6,7 @@ module ThreeDragonAnte
       end
 
       def trigger_power!(gambit, player)
-        gambit.game << Choice.new(:choose_one, [ :steal_per_evil_dragon, :others_pay_per_evil_dragon ]) do |choice|
+        gambit.game << Game::Player::Choice.choose_one(:steal_per_evil_dragon, :others_pay_per_evil_dragon) do |choice|
           evil_dragons = gambit.flights[player].select(&:evil?).size
 
           case choice

@@ -1,18 +1,24 @@
 module ThreeDragonAnte
   class Game
     class Player
-      class Hoard
-        def initialize
-          @value = 0
+      class Hoard < Evented::Integer
+        def initialize(game, &block)
+          super(game, can_become_negative: true) { [_1, :hoard, _2] }
+          @debts = {}
         end
-        attr_reader :value
+        attr_reader :debts
 
-        def gain(num)
-          @value += num
+        def lose(other, to: nil)
+          current = @value
+          remainder = super(other)
+          debt = @value - current
+          add_debt(debt, to) if debt > 0
+          remainder
         end
 
-        def lose(num)
-          @value -= num
+        def add_debt(debt, to)
+          @debts[to] ||= 0
+          @debts[to] += debt
         end
       end
     end

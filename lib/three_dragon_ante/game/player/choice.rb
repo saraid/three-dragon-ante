@@ -4,6 +4,10 @@ module ThreeDragonAnte
       class Choice
         include Refinements::Inspection
 
+        def self.choose_one(*choices, &block)
+          new(:choose_one, choices, &block)
+        end
+
         def initialize(prompt, choices, &block)
           @prompt, @choices = prompt, choices
           @resolved = false

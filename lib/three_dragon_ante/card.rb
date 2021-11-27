@@ -23,7 +23,7 @@ module ThreeDragonAnte
     end
 
     def trigger_power!(gambit, player)
-      raise NotImplementedError
+      #raise NotImplementedError
     end
   end
 end

@@ -10,10 +10,8 @@ RSpec.describe ThreeDragonAnte::Card::GoldDragon do
     { type: ThreeDragonAnte::Card::GoldDragon },
   ] end
 
-  let(:game) { Factory.game(setup_until: [:gambit, 1, :round, 1], stacked_deck: stacked_deck) }
+  let(:game) { Factory.game(setup_until: [:gambit, 1, :round, 1, :aleph], stacked_deck: stacked_deck) }
   let(:gambit) { game.current_gambit }
-
-  before(:each) { gambit.current_round.run }
 
   context 'when triggered' do
     context 'as the first card in flight' do
@@ -44,7 +42,7 @@ RSpec.describe ThreeDragonAnte::Card::GoldDragon do
         # Then aleph will play a gold dragon
         { type: ThreeDragonAnte::Card::GoldDragon },
       ] end
-      let(:game) { Factory.game(setup_until: [:gambit, 1, :round, 2], stacked_deck: stacked_deck) }
+      let(:game) { Factory.game(setup_until: [:gambit, 1, :round, 2, :aleph], stacked_deck: stacked_deck) }
 
       it 'should draw 2 cards' do
         expect(game.players[0].current_choice.choices.first).to be_a ThreeDragonAnte::Card::GoldDragon

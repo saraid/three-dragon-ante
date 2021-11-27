@@ -10,7 +10,7 @@ module ThreeDragonAnte
 
       def initialize(game)
         @game = game
-        @hoard = Evented::Integer.new(game) { [_1, :hoard, _2] }
+        @hoard = Hoard.new(game)
         @hand = Evented::SetOfCards.new(game) { [:player_hand, identifier] }
       end
       attr_reader :game
@@ -29,17 +29,21 @@ module ThreeDragonAnte
         " #{@identifier}"
       end
 
-      def generate_choice_from_hand(prompt:, &block)
+      def generate_choice_from_hand(prompt:, only: :itself.to_proc, &block)
         on_choice = proc do |choice|
           @game << [:choose, self, choice]
           block.call(choice)
         end
 
-        @game << @choice = Choice.new(prompt, @hand.values, &on_choice)
+        @game << @choice = Choice.new(prompt, @hand.values.select(&only), &on_choice)
       end
 
       def draw_card(deck)
         hand << deck.draw! unless hand.size >= MAX_HAND_SIZE
+      end
+
+      def <<(choice)
+        @game << @choice = choice
       end
     end
   end
