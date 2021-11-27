@@ -1,3 +1,4 @@
+require_relative 'gambit/flight'
 require_relative 'gambit/player_ante'
 require_relative 'gambit/round'
 
@@ -10,7 +11,7 @@ module ThreeDragonAnte
         @ante = []
         @rounds = []
         @flights = game.players.zip([]).to_h.transform_values.with_index do |_value, index|
-          Evented::SetOfCards.new(game) { [game.players[index].identifier, :flight] }
+          Flight.new(game) { [game.players[index].identifier, :flight] }
         end
 
         @stakes = Evented::Integer.new(game) { [_1, :stakes, _2] }

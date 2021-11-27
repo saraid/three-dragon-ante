@@ -9,12 +9,15 @@ RSpec.describe ThreeDragonAnte::Game::Gambit::Round do
   describe '#run' do
     it do
       subject.current_player.current_choice.choose! 0
+      game.current_choices.values.each {  _1.choose!(0) } until game.current_choices.empty?
 
       subject.advance
       subject.current_player.current_choice.choose! 0
+      game.current_choices.values.each {  _1.choose!(0) } until game.current_choices.empty?
 
       subject.advance
       subject.current_player.current_choice.choose! 0
+      game.current_choices.values.each {  _1.choose!(0) } until game.current_choices.empty?
 
       expect(subject.ended?).to be true
     end
