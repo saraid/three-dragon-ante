@@ -9,7 +9,9 @@ module ThreeDragonAnte
         cash = gambit.stakes.lose 7
         player.hoard.gain cash
 
-        # player discards a card
+        player.generate_choice_from_hand(prompt: :discard_one) do |choice|
+          player.hand >> choice
+        end
       end
     end
   end
