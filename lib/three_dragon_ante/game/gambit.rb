@@ -19,7 +19,7 @@ module ThreeDragonAnte
       attr_reader :ante, :leader, :flights, :stakes
 
       def ended?
-        false
+        current_phase.first != :ante && (stakes.value.zero? || !@winner.nil?)
       end
 
       def players
@@ -35,10 +35,6 @@ module ThreeDragonAnte
         pay_stakes
         play_rounds
         win_stakes
-      end
-
-      def over?
-        current_phase.first != :ante && (stakes.value.zero? || !@winner.nil?)
       end
 
       def accept_ante

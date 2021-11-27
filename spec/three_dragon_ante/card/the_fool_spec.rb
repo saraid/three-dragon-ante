@@ -1,16 +1,12 @@
 RSpec.describe ThreeDragonAnte::Card::TheFool do
   let(:stacked_deck) do [
-    # We want aleph to go first, so we give them the highest card.
-    { strength: proc { _1 == 13 } },
-    # bet and gimel get lower strength cards
-    { strength: proc { _1 < 13 } },
-    { strength: proc { _1 < 13 } },
+    *Factory.ante_to_choose_leader(:aleph),
 
     # Then aleph will play the fool
     { type: ThreeDragonAnte::Card::TheFool },
   ] end
 
-  let(:game) { Factory.game(setup_until: [:gambit, 1, :round, 1], stacked_deck: stacked_deck) }
+  let(:game) { Factory.game(setup_until: [:gambit, 1, :round, 1, :aleph], stacked_deck: stacked_deck) }
   let(:gambit) { game.current_gambit }
 
   before(:each) { gambit.current_round.run }
@@ -31,6 +27,7 @@ RSpec.describe ThreeDragonAnte::Card::TheFool do
         
       end
 
+      it 'should draw cards for each player with a stronger flight'
     end
   end
 end

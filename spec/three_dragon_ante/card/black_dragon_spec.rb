@@ -1,6 +1,6 @@
 RSpec.describe ThreeDragonAnte::Card::BlackDragon do
   let(:game) do
-    Factory.game(setup_until: [:gambit, 1, :round, 1], stacked_deck: [
+    Factory.game(setup_until: [:gambit, 1, :round, 1, :aleph], stacked_deck: [
       # We want aleph to go first, so we give them the highest card.
       { strength: proc { _1 == 13 } },
       # bet and gimel get lower strength cards
@@ -32,7 +32,7 @@ RSpec.describe ThreeDragonAnte::Card::BlackDragon do
         game.players.first.current_choice.choose! 0
         expect(gambit.stakes.value).to eq 0
 
-        expect(gambit.over?).to eq true
+        expect(gambit.ended?).to eq true
       end
     end
   end

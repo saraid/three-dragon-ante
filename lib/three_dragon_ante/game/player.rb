@@ -22,7 +22,7 @@ module ThreeDragonAnte
       end
 
       def current_choice
-        @choice
+        @choice unless @choice&.resolved?
       end
 
       def custom_inspection
@@ -36,6 +36,15 @@ module ThreeDragonAnte
         end
 
         @game << @choice = Choice.new(prompt, @hand.values.select(&only), &on_choice)
+      end
+
+      def choose_one(*choices, &block)
+        on_choice = proc do |choice|
+          @game << [:choose, self, choice]
+          block.call(choice)
+        end
+
+        @game << @choice = Choice.new(:choose_one, choices, &on_choice)
       end
 
       def draw_card(deck)

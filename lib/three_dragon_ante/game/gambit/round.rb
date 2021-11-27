@@ -3,7 +3,6 @@ module ThreeDragonAnte
     class Gambit
       class Round
         def initialize(gambit)
-          puts "new round: #{gambit.leader.inspect}"
           @game = gambit.game
           @gambit = gambit
           @cards_played = []
@@ -13,13 +12,12 @@ module ThreeDragonAnte
           @player_order = player_order.to_enum
 
           @current_player = @player_order.next
-          puts "player_order #{player_order.inspect} #{current_player.inspect}"
         end
         attr_reader :game, :gambit
         attr_reader :current_player
 
         def ended?
-          gambit.over? || @cards_played.size == game.players.size
+          gambit.ended? || @cards_played.size == game.players.size
         end
 
         def run

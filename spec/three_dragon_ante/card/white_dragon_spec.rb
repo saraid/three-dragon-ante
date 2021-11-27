@@ -42,7 +42,7 @@ RSpec.describe ThreeDragonAnte::Card::WhiteDragon do
 
           game.players[1].current_choice.choose! 0
           expect(gambit.stakes.value).to eq 0
-          expect(gambit.over?).to eq true
+          expect(gambit.ended?).to eq true
         end
       end
     end
