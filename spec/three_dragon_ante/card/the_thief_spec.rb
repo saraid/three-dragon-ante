@@ -13,7 +13,7 @@ RSpec.describe ThreeDragonAnte::Card::TheThief do
   before(:each) { gambit.current_round.run }
 
   context 'when triggered' do
-    it 'should lose 7 gold' do
+    it 'should take 7 gold from stakes and discard a card' do
       expect(game.players[0].current_choice.choices.first).to be_a ThreeDragonAnte::Card::TheThief
 
       current_stakes = gambit.stakes.value
