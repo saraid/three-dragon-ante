@@ -4,9 +4,10 @@ module ThreeDragonAnte
       class Choice
         include Refinements::Inspection
 
-        def initialize(prompt, choices, &block)
+        def initialize(prompt, choices, on_fail: Proc.new { nil }, &block)
           @prompt, @choices = prompt, choices
           @resolved = false
+          @on_fail = proc { @resolved = true } >> on_fail
           @on_choice = block
         end
         attr_reader :prompt, :choices
@@ -20,7 +21,9 @@ module ThreeDragonAnte
         end
 
         def choose!(index)
-          @on_choice.call(@choices[index])
+          if index.nil? then @on_fail.call
+          else @on_choice.call(@choices[index])
+          end
           @resolved = true
         end
 

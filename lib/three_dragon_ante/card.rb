@@ -18,6 +18,14 @@ module ThreeDragonAnte
       define_method(:"#{tag}?") { @tags.include? tag }
     end
 
+    def good_dragon?
+      good? && dragon?
+    end
+
+    def evil_dragon?
+      evil? && dragon?
+    end
+
     def inspectable_attributes
       %i( strength tags )
     end

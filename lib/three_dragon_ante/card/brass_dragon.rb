@@ -11,9 +11,9 @@ module ThreeDragonAnte
           case first_choice
           when :give_stronger_good_dragon
             next if player.hand.size >= Game::Player::MAX_HAND_SIZE
-            opponent.generate_choice_from_hand(prompt: :choose_one, only: :good?.to_proc) do |second_choice|
-              player.hand << second_choice 
-            end
+            opponent.generate_choice_from_hand(
+              prompt: :choose_to_give, only: proc { _1.good_dragon? && _1.strength > strength}
+            ) { |second_choice| player.hand << (opponent.hand >> second_choice) }
           when :pay_me_5_gold
             cash = opponent.hoard.lose 5
             player.hoard.gain cash

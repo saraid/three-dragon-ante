@@ -65,7 +65,7 @@ module ThreeDragonAnte
         else nil
         end
       conditions << proc { |card| !not_types.any? { |klass| klass === card } } unless not_types.nil?
-      conditions << proc { |card| !not_tags.any? { |tag| card.tags.include?(tag) } } unless not_tags.nil?
+      conditions << proc { |card| !not_tags.all? { |tag| card.tags.include?(tag) } } unless not_tags.nil?
       conditions.compact!
 
       @deck.find { |card| conditions.all? { |condition| condition.call(card) }}.tap do |card|
