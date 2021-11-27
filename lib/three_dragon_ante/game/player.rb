@@ -7,6 +7,8 @@ module ThreeDragonAnte
       include Refinements::Inspection
 
       MAX_HAND_SIZE = 10
+      STARTING_HAND_SIZE = 6
+      STARTING_HOARD_SIZE = 50
 
       def initialize(game)
         @game = game

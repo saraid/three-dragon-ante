@@ -24,10 +24,10 @@ module ThreeDragonAnte
       @current_phase = :setup
 
       @players.each do |player|
-        player.hoard.gain 50
+        player.hoard.gain Player::STARTING_HOARD_SIZE
       end
 
-      6.times do
+      Player::STARTING_HAND_SIZE.times do
         @players.each do |player|
           player.hand << @deck.draw!
         end

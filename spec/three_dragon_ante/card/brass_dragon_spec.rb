@@ -62,7 +62,7 @@ RSpec.describe ThreeDragonAnte::Card::BrassDragon do
             # guarantee aleph has strongest flight, hand has weaker good dragon
             aleph: [{ strength: proc { _1 > 10 } },
                     { tags: %i( good dragon), strength: proc { _1 < 5 } },
-                    *4.times.map { { is_not: %i( good ) } }],
+                    *4.times.map { { is_not: %i( good dragon ) } }],
             bet: [{ strength: proc { _1 < 5 } }], # guarantee weakest flight and next player will trigger
             gimel: [{ type: ThreeDragonAnte::Card::BrassDragon, strength: proc { (5..10).include? _1 } }]
           })

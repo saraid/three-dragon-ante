@@ -12,7 +12,9 @@ module Factory
   end
 
   def self.flights(player_order: PLAYER_IDENTIFIERS[0...3], flights:)
-    flights.values.each { |flight| (6 - flight.size).times { flight << {} } }
+    flights.values.each do |flight|
+      (ThreeDragonAnte::Game::Player::STARTING_HAND_SIZE - flight.size).times { flight << {} }
+    end
     head_flight, *rest_flights = flights.values_at(*player_order)
     head_flight.zip(*rest_flights).flatten.compact
   end
