@@ -7,6 +7,10 @@ module ThreeDragonAnte
           context = @describer.call if @describer
           [*context, operation, other]
         end
+
+        def strength
+          @values.map(&:strength).reduce(0, :+)
+        end
       end
     end
   end

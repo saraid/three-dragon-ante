@@ -31,6 +31,10 @@ module ThreeDragonAnte
           game << describe(:lose, other)
           @values.delete(other)
         end
+
+        def rotate!
+          @values << @values.shift
+        end
       end
     end
   end

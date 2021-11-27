@@ -17,6 +17,13 @@ module Factory
         proc { game.current_gambit.reveal_ante },
         proc { game.current_gambit.choose_leader },
         proc { game.current_gambit.pay_stakes },
+        proc do
+          game.players.size.times do
+            game.current_gambit.current_round.run
+            game.current_gambit.current_round.current_player.current_choice.choose!(0)
+            game.current_gambit.current_round.next unless game.current_gambit.current_round.ended?
+          end
+        end
       ]
 
       setup_actions.each do |action|

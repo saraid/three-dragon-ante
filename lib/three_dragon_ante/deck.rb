@@ -8,9 +8,9 @@ module ThreeDragonAnte
       @deck = []
       @discarded = []
 
-     #%i[Archmage Bahamut Dracolich Dragonslayer Druid Fool Priest Princess Thief Tiamat].each { |name|
-     #  @deck << Card.const_get(name).new
-     #}
+     %i[Archmage Bahamut Dracolich Dragonslayer Druid TheFool Priest Princess TheThief Tiamat].each { |name|
+       @deck << Card.const_get(name).new if Card.constants.include? name
+     }
 
       [1, 2, 3, 5,  7,  9].each { |str| @deck << Card::BlackDragon.new(str)  }
       [1, 2, 4, 7,  9, 11].each { |str| @deck << Card::BlueDragon.new(str)   }

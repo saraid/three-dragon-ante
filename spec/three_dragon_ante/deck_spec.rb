@@ -18,7 +18,7 @@ RSpec.describe ThreeDragonAnte::Deck do
 
     context 'with strength parameter' do
       it 'should return a card of the exact strength' do
-        strength = rand(13)
+        strength = rand(1..13)
         expect(subject.pull_card(strength: strength).strength).to eq strength
       end
 

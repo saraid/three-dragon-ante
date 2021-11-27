@@ -27,7 +27,6 @@ RSpec.describe ThreeDragonAnte::Game::Gambit do
       expect(subject.ante_ready?).to eq false
       player_bet.current_choice.choose!(0)
       expect(subject.ante_ready?).to eq false
-      puts subject.ante
       player_gimel.current_choice.choose!(0)
       expect(subject.ante_ready?).to eq true
     end

@@ -6,14 +6,20 @@ module ThreeDragonAnte
     class Player
       include Refinements::Inspection
 
+      MAX_HAND_SIZE = 10
+
       def initialize(game)
         @game = game
         @hoard = Evented::Integer.new(game) { [_1, :hoard, _2] }
-        @hand = Evented::SetOfCards.new(game) { [:player_hand, identifier || object_id] }
+        @hand = Evented::SetOfCards.new(game) { [:player_hand, identifier] }
       end
       attr_reader :game
-      attr_accessor :identifier
+      attr_writer :identifier
       attr_reader :hoard, :hand
+
+      def identifier
+        @identifier || object_id # TODO
+      end
 
       def current_choice
         @choice
@@ -23,13 +29,17 @@ module ThreeDragonAnte
         " #{@identifier}"
       end
 
-      def generate_choice_from_hand(&block)
+      def generate_choice_from_hand(prompt:, &block)
         on_choice = proc do |choice|
           @game << [:choose, self, choice]
           block.call(choice)
         end
 
-        @game << @choice = Choice.new(@hand.values, &on_choice)
+        @game << @choice = Choice.new(prompt, @hand.values, &on_choice)
+      end
+
+      def draw_card(deck)
+        hand << deck.draw! unless hand.size >= MAX_HAND_SIZE
       end
     end
   end

@@ -4,14 +4,15 @@ module ThreeDragonAnte
       class Choice
         include Refinements::Inspection
 
-        def initialize(choices, &block)
-          @choices = choices
+        def initialize(prompt, choices, &block)
+          @prompt, @choices = prompt, choices
+          @resolved = false
           @on_choice = block
         end
-        attr_reader :choices
+        attr_reader :prompt, :choices
         
         def inspectable_attributes
-          %i( choices )
+          %i( prompt choices )
         end
 
         def custom_inspection
@@ -20,6 +21,11 @@ module ThreeDragonAnte
 
         def choose!(index)
           @on_choice.call(@choices[index])
+          @resolvd = true
+        end
+
+        def resolved?
+          @resolved
         end
       end
     end

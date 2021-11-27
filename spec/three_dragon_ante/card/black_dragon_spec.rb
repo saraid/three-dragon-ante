@@ -8,7 +8,7 @@ RSpec.describe ThreeDragonAnte::Card::BlackDragon do
       { strength: proc { _1 < 13 } },
 
       # Then aleph will play a black dragon
-      { type: ThreeDragonAnte::Card::BlackDragon }
+      { type: ThreeDragonAnte::Card::BlackDragon },
     ])
   end
   let(:gambit) { game.current_gambit }
