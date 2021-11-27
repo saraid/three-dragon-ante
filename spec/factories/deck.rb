@@ -11,8 +11,8 @@ module Factory
     stacked_ante
   end
 
-  def self.flights(player_order:, flights:)
+  def self.flights(player_order: PLAYER_IDENTIFIERS[0...3], flights:)
     head_flight, *rest_flights = flights.values_at(*player_order)
-    head_flight.zip(*rest_flights).flatten
+    head_flight.zip(*rest_flights).flatten.compact
   end
 end

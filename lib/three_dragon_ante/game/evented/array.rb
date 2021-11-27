@@ -35,6 +35,10 @@ module ThreeDragonAnte
         def rotate!
           @values << @values.shift
         end
+
+        def except(item)
+          @values.dup.tap { _1.delete(item) }
+        end
       end
     end
   end

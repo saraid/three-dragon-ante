@@ -14,8 +14,8 @@ module ThreeDragonAnte
             cash = gambit.stakes.lose evil_dragons
             player.hoard.gain cash
           when :others_pay_per_evil_dragon
-            gambit.players.each do |opponent|
-              cash = opponent.hoard.lose
+            gambit.players.except(player).each do |opponent|
+              cash = opponent.hoard.lose evil_dragons
               gambit.stakes.gain cash
             end
           end
