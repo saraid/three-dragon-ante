@@ -20,10 +20,11 @@ RSpec.describe ThreeDragonAnte::Card::WhiteDragon do
       before(:each) do
         expect(game.players[0].current_choice.choices.first).to be_mortal
         game.players[0].current_choice.choose! 0
+        gambit.current_round.next_player
+        gambit.current_round.run
       end
 
       it 'should steal 3 gold from the stakes' do
-        gambit.current_round.run
         expect(game.players[1].current_choice.choices.first).to be_a ThreeDragonAnte::Card::WhiteDragon
 
         current_stakes = gambit.stakes.value
@@ -37,7 +38,6 @@ RSpec.describe ThreeDragonAnte::Card::WhiteDragon do
         end
 
         it 'should steal 1 gold and end the gambit' do
-          gambit.current_round.run
           expect(game.players[1].current_choice.choices.first).to be_a ThreeDragonAnte::Card::WhiteDragon
 
           game.players[1].current_choice.choose! 0
@@ -49,11 +49,7 @@ RSpec.describe ThreeDragonAnte::Card::WhiteDragon do
 
     context 'and a mortal has not been played' do
       let(:stacked_deck) do [
-        # We want aleph to go first, so we give them the highest card.
-        { strength: proc { _1 == 13 } },
-        # bet and gimel get lower strength cards
-        { strength: proc { _1 < 13 } },
-        { strength: proc { _1 < 13 } },
+        *Factory.ante_to_choose_leader(:aleph),
 
         # Then aleph will have a thief
         { type: ThreeDragonAnte::Card::GoldDragon },
@@ -64,10 +60,11 @@ RSpec.describe ThreeDragonAnte::Card::WhiteDragon do
       before(:each) do
         expect(game.players[0].current_choice.choices.first).not_to be_mortal
         game.players[0].current_choice.choose! 0
+        gambit.current_round.next_player
+        gambit.current_round.run
       end
 
       it 'should do nothing' do
-        gambit.current_round.run
         expect(game.players[1].current_choice.choices.first).to be_a ThreeDragonAnte::Card::WhiteDragon
 
         current_stakes = gambit.stakes.value

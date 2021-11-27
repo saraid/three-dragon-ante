@@ -1,9 +1,6 @@
 RSpec.describe ThreeDragonAnte::Game::Gambit::Round do
   let(:stacked_deck) { [
-    # Guarantee that aleph starts 
-    { strength: proc { _1 < 13 } },
-    { strength: proc { _1 == 13 } },
-    { strength: proc { _1 == 13 } }
+    *Factory.ante_to_choose_leader(:bet)
   ] }
   let(:game) { Factory.game(setup_until: [:gambit, 1, :round, 1, :bet], stacked_deck: stacked_deck) }
   let(:gambit) { game.current_gambit}
@@ -13,9 +10,11 @@ RSpec.describe ThreeDragonAnte::Game::Gambit::Round do
     it do
       subject.current_player.current_choice.choose! 0
 
+      subject.next_player
       subject.run
       subject.current_player.current_choice.choose! 0
 
+      subject.next_player
       subject.run
       subject.current_player.current_choice.choose! 0
 
