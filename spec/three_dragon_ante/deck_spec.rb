@@ -48,5 +48,17 @@ RSpec.describe ThreeDragonAnte::Deck do
         expect(actual).to be_a ThreeDragonAnte::Card::RedDragon
       end
     end
+
+    context 'with is_not parameter' do
+      it 'should remove is_not[type]' do
+        actual = subject.pull_card(is_not: [ThreeDragonAnte::Card::TheFool])
+        expect(actual).not_to be_a ThreeDragonAnte::Card::TheFool
+      end
+
+      it 'should remove is_not[tag]' do
+        actual = subject.pull_card(is_not: %i( dragon ))
+        expect(actual.tags).not_to include :dragon
+      end
+    end
   end
 end

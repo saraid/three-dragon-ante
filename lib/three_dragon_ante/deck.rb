@@ -50,7 +50,9 @@ module ThreeDragonAnte
       @deck[0..num]
     end
 
-    def pull_card(type: nil, strength: nil, tags: [])
+    def pull_card(type: nil, strength: nil, tags: [], is_not: [])
+      not_types, not_tags = is_not.group_by(&:class).values_at(Class, Symbol)
+
       conditions = []
       conditions << proc { type === _1 } unless type.nil?
       conditions << proc { |card| tags.all? { |tag| card.tags.include?(tag) } } unless tags.empty?
@@ -60,6 +62,8 @@ module ThreeDragonAnte
         when Proc then proc { _1.strength } >> strength
         else nil
         end
+      conditions << proc { |card| !not_types.any? { |klass| klass === card } } unless not_types.nil?
+      conditions << proc { |card| !not_tags.any? { |tag| card.tags.include?(tag) } } unless not_tags.nil?
       conditions.compact!
 
       @deck.find { |card| conditions.all? { |condition| condition.call(card) }}.tap do |card|

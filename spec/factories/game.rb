@@ -1,12 +1,7 @@
 module Factory
-  PLAYER_IDENTIFIERS = %i( aleph bet gimel dalet he vav zayin chet tet yod kaf )
   def self.game(player_count: 3, setup_until: :waiting_for_players, stacked_deck: [])
     ThreeDragonAnte::Game.new.tap do |game|
-      player_count.times do |i|
-        game.players << ThreeDragonAnte::Game::Player.new(game).tap do |player|
-          player.identifier = PLAYER_IDENTIFIERS[i]
-        end
-      end
+      player_count.times { |i| game.players << Factory.player(game, PLAYER_IDENTIFIERS[i]) }
 
       game.deck.stack_set! stacked_deck
 

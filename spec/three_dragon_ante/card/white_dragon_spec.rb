@@ -1,18 +1,15 @@
 RSpec.describe ThreeDragonAnte::Card::WhiteDragon do
   let(:stacked_deck) do [
-    # We want aleph to go first, so we give them the highest card.
-    { strength: proc { _1 == 13 } },
-    # bet and gimel get lower strength cards
-    { strength: proc { _1 < 13 } },
-    { strength: proc { _1 < 13 } },
+    *Factory.ante_to_choose_leader(:aleph),
 
     # Then aleph will have a thief
     { type: ThreeDragonAnte::Card::TheFool },
     # Then bet will play a white dragon
     { type: ThreeDragonAnte::Card::WhiteDragon },
   ] end
+  let(:target_phase) { [:gambit, 1, :round, 1, :aleph] }
 
-  let(:game) { Factory.game(setup_until: [:gambit, 1, :round, 1, :aleph], stacked_deck: stacked_deck) }
+  let(:game) { Factory.game(setup_until: target_phase, stacked_deck: stacked_deck) }
   let(:gambit) { game.current_gambit }
 
   context 'when triggered' do

@@ -5,8 +5,9 @@ RSpec.describe ThreeDragonAnte::Card::TheFool do
     # Then aleph will play the fool
     { type: ThreeDragonAnte::Card::TheFool },
   ] end
+  let(:target_phase) { [:gambit, 1, :round, 1, :aleph] }
 
-  let(:game) { Factory.game(setup_until: [:gambit, 1, :round, 1, :aleph], stacked_deck: stacked_deck) }
+  let(:game) { Factory.game(setup_until: target_phase, stacked_deck: stacked_deck) }
   let(:gambit) { game.current_gambit }
 
   before(:each) { gambit.current_round.run }
@@ -23,11 +24,26 @@ RSpec.describe ThreeDragonAnte::Card::TheFool do
     end
 
     context 'when other players have stronger flights' do
-      before(:each) do
-        
-      end
+      let(:target_phase) { [:gambit, 1, :round, 2, :aleph] }
+      let(:stacked_deck) do [
+        *Factory.ante_to_choose_leader(:aleph),
 
-      it 'should draw cards for each player with a stronger flight'
+        # Then aleph will play the fool
+        { strength: proc { _1 < 5 } }, # max strength: 4 + Fool (3) = 7
+        { strength: proc { _1 > 7 } },
+        { strength: proc { _1 > 7 } },
+
+        # Then aleph will play the fool
+        { type: ThreeDragonAnte::Card::TheFool },
+      ] end
+
+      it 'should draw cards for each player with a stronger flight' do
+        expect(game.players[0].current_choice.choices.first).to be_a ThreeDragonAnte::Card::TheFool
+
+        current_hand_size = game.players[0].hand.size
+        game.players[0].current_choice.choose! 0
+        expect(game.players[0].hand.size).to eq(current_hand_size + 1) # card played (-1) draw 2 (+2)
+      end
     end
   end
 end
