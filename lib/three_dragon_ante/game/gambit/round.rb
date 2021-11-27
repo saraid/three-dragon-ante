@@ -35,6 +35,11 @@ module ThreeDragonAnte
         def next_player
           @current_player = @player_order.next unless ended?
         end
+
+        def advance
+          next_player
+          run
+        end
       end
     end
   end

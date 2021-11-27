@@ -10,12 +10,10 @@ RSpec.describe ThreeDragonAnte::Game::Gambit::Round do
     it do
       subject.current_player.current_choice.choose! 0
 
-      subject.next_player
-      subject.run
+      subject.advance
       subject.current_player.current_choice.choose! 0
 
-      subject.next_player
-      subject.run
+      subject.advance
       subject.current_player.current_choice.choose! 0
 
       expect(subject.ended?).to be true
