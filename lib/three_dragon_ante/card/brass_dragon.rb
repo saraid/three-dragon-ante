@@ -7,7 +7,7 @@ module ThreeDragonAnte
 
       def trigger_power!(gambit, player)
         opponent, _flight = gambit.flights.reject { _1 == player }.max_by { _2.strength }
-        opponent << Game::Player::Choice.choose_one(:give_stronger_good_dragon, :pay_me_5_gold) do |first_choice|
+        opponent.choose_one(:give_stronger_good_dragon, :pay_me_5_gold) do |first_choice|
           case first_choice
           when :give_stronger_good_dragon
             next if player.hand.size >= Game::Player::MAX_HAND_SIZE

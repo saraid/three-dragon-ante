@@ -10,4 +10,9 @@ module Factory
     stacked_ante[index] = { strength: proc { _1 == 13 } }
     stacked_ante
   end
+
+  def self.flights(player_order:, flights:)
+    head_flight, *rest_flights = flights.values_at(*player_order)
+    head_flight.zip(*rest_flights).flatten
+  end
 end

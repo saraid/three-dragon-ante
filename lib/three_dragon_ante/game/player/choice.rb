@@ -21,7 +21,7 @@ module ThreeDragonAnte
 
         def choose!(index)
           @on_choice.call(@choices[index])
-          @resolvd = true
+          @resolved = true
         end
 
         def resolved?

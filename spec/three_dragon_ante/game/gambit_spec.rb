@@ -1,5 +1,4 @@
 RSpec.describe ThreeDragonAnte::Game::Gambit do
-  let(:game) { Factory.game }
   let(:player_aleph) { game.players[0] }
   let(:player_bet) { game.players[1] }
   let(:player_gimel) { game.players[2] }
@@ -84,6 +83,22 @@ RSpec.describe ThreeDragonAnte::Game::Gambit do
       subject.pay_stakes
 
       expect(subject.stakes.value).to be > 0
+    end
+  end
+
+  describe '#winner' do
+    let(:stacked_deck) do [
+      *Factory.ante_to_choose_leader(:aleph),
+      *Factory.flights(player_order: %i( aleph bet gimel ), flights: {
+        aleph: [ { strength: 10 }, { strength: 5 }, { strength: 3 } ], # strength=18
+        bet:   [ { strength:  9 }, { strength: 9 }, { strength: 1 } ], # strength=19
+        gimel: [ { strength: 11 }, { strength: 3 }, { strength: 2 } ], # strength=16
+      })
+    ] end
+    let(:game) { Factory.game(setup_until: [:gambit, 1, :win_stakes], stacked_deck: stacked_deck) }
+
+    it 'should be bet' do
+      expect(subject.winner.identifier).to be :bet
     end
   end
 end

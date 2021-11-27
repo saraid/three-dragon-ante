@@ -16,16 +16,19 @@ module ThreeDragonAnte
         attr_reader :game, :gambit
         attr_reader :current_player
 
+        def started?
+          @cards_played.size > 0
+        end
+
         def ended?
-          gambit.ended? || @cards_played.size == game.players.size
+          @cards_played.size == game.players.size
         end
 
         def run
           current_player.generate_choice_from_hand(prompt: :play_card) do |choice|
-            @cards_played << [current_player, choice]
+            @cards_played << [current_player, current_player.hand >> choice]
             gambit.flights[current_player] << choice
             choice.trigger_power!(gambit, current_player)
-            next_player
           end
         end
 

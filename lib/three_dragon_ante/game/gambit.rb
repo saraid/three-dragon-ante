@@ -19,7 +19,11 @@ module ThreeDragonAnte
       attr_reader :ante, :leader, :flights, :stakes
 
       def ended?
-        current_phase.first != :ante && (stakes.value.zero? || !@winner.nil?)
+        current_phase.first != :ante && (stakes.value.zero? || !winner.nil?)
+      end
+
+      def stakes_distributed?
+        current_phase == :stakes_distributed
       end
 
       def players
@@ -34,7 +38,7 @@ module ThreeDragonAnte
         end
         pay_stakes
         play_rounds
-        win_stakes
+        distribute_stakes
       end
 
       def accept_ante
@@ -94,7 +98,25 @@ module ThreeDragonAnte
         @round
       end
 
-      def win_stakes
+      def weakest_flight_wins!
+        @weakest_flight_wins = true
+      end
+
+      def winner
+        return if @rounds.select(&:ended?).size < 3
+
+        by_strength = @flights.group_by { _2.strength }
+        winning_flight_strength = by_strength.keys.sort.send(@weakest_flight_wins ? :first : :last)
+        return if by_strength[winning_flight_strength].size > 1
+
+        player, flight = by_strength[winning_flight_strength].first
+        @winner = player
+      end
+
+      def distribute_stakes
+        @current_phase = :distribute_stakes
+        puts @flights.map { |player, flight| "#{player.identifier} (#{flight.strength}): #{flight.inspect}" }
+        @winner.hoard.gain @stakes.value
       end
     end
   end

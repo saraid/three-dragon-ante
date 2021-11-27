@@ -48,11 +48,15 @@ module ThreeDragonAnte
     end
 
     def current_gambit
-      if @gambit.nil? || @gambit.ended?
+      if @gambit.nil? || @gambit.stakes_distributed?
         @gambit = Gambit.new(self).tap(&@gambits.method(:<<))
         @current_phase = proc { [:gambit, @gambits.size, *@gambit.current_phase] }
       end
       @gambit
+    end
+
+    def current_choices
+      players.zip(players.map(&:current_choice)).to_h.compact
     end
   end
 end
