@@ -5,7 +5,7 @@ RSpec.describe ThreeDragonAnte::Card::WhiteDragon do
     # Then aleph will have a thief
     { type: ThreeDragonAnte::Card::TheFool },
     # Then bet will play a white dragon
-    { type: ThreeDragonAnte::Card::WhiteDragon },
+    { type: ThreeDragonAnte::Card::WhiteDragon, strength: proc { _1 > 3 } },
   ] end
   let(:target_phase) { [:gambit, 1, :round, 1, :aleph] }
 
@@ -17,8 +17,7 @@ RSpec.describe ThreeDragonAnte::Card::WhiteDragon do
       before(:each) do
         expect(game.players[0].current_choice.choices.first).to be_mortal
         game.players[0].current_choice.choose! 0
-        gambit.current_round.next_player
-        gambit.current_round.run
+        gambit.current_round.advance
       end
 
       it 'should steal 3 gold from the stakes' do
@@ -49,16 +48,15 @@ RSpec.describe ThreeDragonAnte::Card::WhiteDragon do
         *Factory.ante_to_choose_leader(:aleph),
 
         # Then aleph will have a thief
-        { type: ThreeDragonAnte::Card::GoldDragon },
+        { type: ThreeDragonAnte::Card::GoldDragon, strength: 6 },
         # Then bet will play a white dragon
-        { type: ThreeDragonAnte::Card::WhiteDragon },
+        { type: ThreeDragonAnte::Card::WhiteDragon, strength: proc { _1 > 6 } }, # assure power triggers
       ] end
 
       before(:each) do
         expect(game.players[0].current_choice.choices.first).not_to be_mortal
         game.players[0].current_choice.choose! 0
-        gambit.current_round.next_player
-        gambit.current_round.run
+        gambit.current_round.advance
       end
 
       it 'should do nothing' do

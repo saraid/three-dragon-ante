@@ -12,6 +12,7 @@ module ThreeDragonAnte
           @player_order = player_order.to_enum
 
           @current_player = @player_order.next
+          @last_played_strength = 0
         end
         attr_reader :game, :gambit
         attr_reader :current_player
@@ -28,7 +29,8 @@ module ThreeDragonAnte
           current_player.generate_choice_from_hand(prompt: :play_card) do |choice|
             @cards_played << [current_player, current_player.hand >> choice]
             gambit.flights[current_player] << choice
-            choice.trigger_power!(gambit, current_player)
+            choice.trigger_power!(gambit, current_player) if choice.strength > @last_played_strength
+            @last_played_strength = choice.strength
           end
         end
 
