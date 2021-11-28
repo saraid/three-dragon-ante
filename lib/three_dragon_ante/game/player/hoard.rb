@@ -1,24 +1,33 @@
+require_relative 'hoard/debt'
+
 module ThreeDragonAnte
   class Game
     class Player
       class Hoard < Evented::Integer
-        def initialize(game, &block)
-          super(game, can_become_negative: true) { [_1, :hoard, _2] }
-          @debts = {}
+        def initialize(game, player, &block)
+          super(game) { [_1, :hoard, _2] }
+          @game = game
+          @debts = Evented::Array.new(game) { [:debts, player, _1, _2] }
         end
         attr_reader :debts
+
+        def gain(other)
+          amount = other
+          @debts.reject! do |debt|
+            payable = [[amount, debt.value].min, 0].max
+            debt.pay payable
+            amount -= payable
+            debt.value.zero?
+          end
+          super(amount)
+        end
 
         def lose(other, to: nil)
           current = @value
           remainder = super(other)
-          debt = @value - current
-          add_debt(debt, to) if debt > 0
+          debt = current - @value
+          @debts << Debt.new(@game, debt, to) if debt > 0 && !to.nil?
           remainder
-        end
-
-        def add_debt(debt, to)
-          @debts[to] ||= 0
-          @debts[to] += debt
         end
       end
     end

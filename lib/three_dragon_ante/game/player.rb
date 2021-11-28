@@ -12,7 +12,7 @@ module ThreeDragonAnte
 
       def initialize(game)
         @game = game
-        @hoard = Hoard.new(game)
+        @hoard = Hoard.new(game, self)
         @hand = Evented::SetOfCards.new(game) { [:player_hand, identifier] }
         @choices = Choice::Array.new
       end

@@ -7,7 +7,7 @@ module ThreeDragonAnte
         extend Forwardable
         include Enumerable
 
-        def_delegators :@values, :size, :each, :[], :index, :sample
+        def_delegators :@values, :size, :each, :[], :index, :sample, :reject!, :empty?
 
         def initialize(game, &block)
           @game = game

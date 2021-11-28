@@ -6,8 +6,6 @@ module ThreeDragonAnte
       class Integer
         extend Forwardable
 
-        #def_delegators :@value
-
         def initialize(game, can_become_negative: false, &block)
           @game = game
           @can_become_negative = can_become_negative
