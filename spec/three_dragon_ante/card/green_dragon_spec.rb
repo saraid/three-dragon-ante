@@ -2,26 +2,36 @@ RSpec.describe ThreeDragonAnte::Card::GreenDragon do
   let(:stacked_deck) do [
     *Factory.ante_to_choose_leader(:aleph),
     *Factory.flights(flights: {
-      aleph: [{ type: ThreeDragonAnte::Card::BlackDragon, strength: proc { _1 < 5 } }],
-      bet: [{ type: ThreeDragonAnte::Card::GreenDragon, strength: proc { _1 > 5 } }],
+      aleph: [{ type: ThreeDragonAnte::Card::GreenDragon, strength: proc { _1 > 5 } }],
+      bet: [],
       gimel: []
     })
   ] end
-  let(:game) { Factory.game(setup_until: [:gambit, 1, :round, 1, :bet], stacked_deck: stacked_deck) }
+  let(:game) { Factory.game(setup_until: [:gambit, 1, :round, 1, :aleph], stacked_deck: stacked_deck) }
   let(:gambit) { game.current_gambit }
 
   context 'when triggered' do
-    let(:opponent) { game.players[0] }
-    let(:player) { game.players[1] }
+    let(:opponent) { game.players[1] }
+    let(:player) { game.players[0] }
 
     before(:each) do
-      gambit.current_round.run
       player.current_choice.choose! 0 # play GreenDragon
     end
 
     it 'offers a choice to opponent to the left' do
       expect(opponent.current_choice.prompt).to eq :choose_one
       expect(opponent.current_choice.choices.size).to eq 2
+    end
+
+    context 'on a strength-1' do
+      let(:stacked_deck) do [
+        *Factory.ante_to_choose_leader(:aleph),
+        { type: ThreeDragonAnte::Card::GreenDragon, strength: 1 }
+      ] end
+
+      it 'offers no choice' do
+        expect(opponent.current_choice).to be_nil
+      end
     end
 
     context 'and the opponent chooses to give a weaker evil dragon' do
@@ -37,8 +47,8 @@ RSpec.describe ThreeDragonAnte::Card::GreenDragon do
         let(:stacked_deck) do [
           *Factory.ante_to_choose_leader(:aleph),
           *Factory.flights(flights: {
-            aleph: [{ tags: %i( evil dragon), strength: proc { _1 < 5 } }],
-            bet: [{ type: ThreeDragonAnte::Card::GreenDragon, strength: proc { _1 > 5 } }],
+            aleph: [{ type: ThreeDragonAnte::Card::GreenDragon, strength: proc { _1 > 5 } }],
+            bet: [{ type: ThreeDragonAnte::Card::BlackDragon, strength: proc { _1 < 5 } }],
             gimel: []
           })
         ] end
@@ -56,8 +66,8 @@ RSpec.describe ThreeDragonAnte::Card::GreenDragon do
         let(:stacked_deck) do [
           *Factory.ante_to_choose_leader(:aleph),
           *Factory.flights(flights: {
-            aleph: [{ strength: proc { _1 < 6 }}, *4.times.map {{ strength: proc { _1 > 6 } }}],
-            bet: [{ type: ThreeDragonAnte::Card::GreenDragon, strength: 6 }],
+            aleph: [{ type: ThreeDragonAnte::Card::GreenDragon, strength: 6 }],
+            bet: [*5.times.map {{ strength: proc { _1 > 6 } }}],
             gimel: []
           })
         ] end
