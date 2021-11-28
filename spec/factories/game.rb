@@ -4,6 +4,7 @@ module Factory
       player_count.times { |i| game.players << Factory.player(game, PLAYER_IDENTIFIERS[i]) }
 
       game.deck.stack_set! stacked_deck
+      #puts game.deck.peek(22)
 
       setup_actions = [
         proc { game.setup! },

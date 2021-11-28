@@ -30,7 +30,12 @@ module ThreeDragonAnte
             @cards_played << [current_player, current_player.hand >> choice]
             gambit.flights[current_player] << choice
             choice.trigger_power!(gambit, current_player) if choice.strength > @last_played_strength
-            @last_played_strength = choice.strength
+
+            if ThreeDragonAnte::Card::CopperDragon === choice
+              # TODO
+            else
+              @last_played_strength = choice.strength
+            end
           end
         end
 

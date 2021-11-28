@@ -49,7 +49,7 @@ module ThreeDragonAnte
     end
 
     def peek(num)
-      @deck[0..num]
+      @deck[0...num]
     end
 
     def pull_card(type: nil, strength: nil, tags: [], is_not: [])
