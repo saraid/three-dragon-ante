@@ -34,18 +34,5 @@ RSpec.describe ThreeDragonAnte::Card::BronzeDragon do
         expect(gambit.ante.size).to eq 1
       end
     end
-
-    # TODO: Need to handle a three-way tie on the ante first
-    xcontext 'and the ante is all same strengths' do
-      let(:ante) do [
-        { strength: 11 }, { strength: 11 }, { strength: 11 }
-      ] end
-
-      it 'should give a choice of the 3 weakest' do
-        game.players[0].current_choice.choose! 0 # play BronzeDragon
-        expect(game.players[0].current_choice).not_to be_nil
-        #expect(gambit.ante.size).to eq 1
-      end
-    end
   end
 end
