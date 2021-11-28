@@ -6,7 +6,7 @@ module ThreeDragonAnte
       end
 
       def trigger_power!(gambit, player)
-        opponent, flight = gambit.flights.max_by { _2.strength }
+        opponent, flight = gambit.flights.reject { player == _1 }.max_by { _2.strength }
 
         player.hoard.gain(opponent.hoard.lose(1, to: player))
         player.hand << (opponent.hand >> opponent.hand.sample)
