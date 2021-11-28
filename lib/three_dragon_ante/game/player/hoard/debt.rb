@@ -17,6 +17,7 @@ module ThreeDragonAnte
           end
 
           def pay(amount)
+            return if amount <= 0
             player.hoard.gain amount
             lose(amount)
           end

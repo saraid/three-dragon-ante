@@ -2,6 +2,7 @@ RSpec.describe ThreeDragonAnte::Game::Player::Hoard do
   let(:game) { ThreeDragonAnte::Game.new }
   let(:player) { ThreeDragonAnte::Game::Player.new(game) }
   let(:opponent) { ThreeDragonAnte::Game::Player.new(game) }
+  let(:opponent2) { ThreeDragonAnte::Game::Player.new(game) }
 
   before(:each) { player.hoard.gain(5) }
 
@@ -35,6 +36,26 @@ RSpec.describe ThreeDragonAnte::Game::Player::Hoard do
 
       expect(opponent.hoard.value).to eq 10
       expect(player.hoard.value).to eq 5
+      expect(player.hoard.debts).to be_empty
+    end
+  end
+
+  context 'when indebted to multiple people' do
+    before(:each) do
+      opponent.hoard.gain(player.hoard.lose(10, to: opponent))
+      opponent2.hoard.gain(player.hoard.lose(10, to: opponent2))
+    end
+
+    it 'should pay in order of receipt of debt' do
+      expect(opponent.hoard.value).to eq 5
+      expect(player.hoard.value).to eq 0
+      expect(player.hoard.debts.size).to eq 2
+
+      player.hoard.gain 10
+
+      expect(opponent.hoard.value).to eq 10
+      expect(player.hoard.value).to eq 5
+      expect(player.hoard.debts.size).to eq 1
     end
   end
 end
