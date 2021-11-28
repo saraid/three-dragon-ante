@@ -38,7 +38,7 @@ module ThreeDragonAnte
           block.call(choice)
         end
 
-        @game << [identifier, :choice, @choices << Choice.new(prompt, @hand.values.select(&only), &on_choice)]
+        @game << [identifier, :choice, @choices << Choice.new(prompt, @hand.values.select(&only), &on_choice), @choices.size]
       end
 
       def choose_one(*choices, prompt: :choose_one, &block)
@@ -47,7 +47,7 @@ module ThreeDragonAnte
           block.call(choice)
         end
 
-        @game << [identifier, :choice, @choices << Choice.new(prompt, choices, &on_choice)]
+        @game << [identifier, :choice, @choices << Choice.new(prompt, choices, &on_choice), @choices.size]
       end
 
       def draw_card(deck)
