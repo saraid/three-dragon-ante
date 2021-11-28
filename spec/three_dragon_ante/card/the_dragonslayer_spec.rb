@@ -2,7 +2,7 @@ RSpec.describe ThreeDragonAnte::Card::TheDragonslayer do
   let(:stacked_deck) do [
     *Factory.ante_to_choose_leader(:aleph, but_not: ThreeDragonAnte::Card::TheDragonslayer),
     *Factory.flights(flights: {
-      aleph: [{ type: ThreeDragonAnte::Card::BlackDragon, strength: proc { _1 < 8 } }],
+      aleph: [{ type: ThreeDragonAnte::Card::BlackDragon, strength: cmp(:>=, 8) }],
       bet: [{ type: ThreeDragonAnte::Card::TheDragonslayer }],
       gimel: []
     })

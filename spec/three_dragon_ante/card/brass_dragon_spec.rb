@@ -3,9 +3,9 @@ RSpec.describe ThreeDragonAnte::Card::BrassDragon do
   let(:stacked_deck) do [
     *Factory.ante_to_choose_leader(:aleph),
     *Factory.flights(flights: {
-      aleph: [{ strength: proc { _1 > 10 } }], # guarantee strongest flight
-      bet: [{ strength: proc { _1 < 5 } }], # guarantee weakest flight and next player will trigger
-      gimel: [{ type: ThreeDragonAnte::Card::BrassDragon, strength: proc { (5..10).include? _1 } }]
+      aleph: [{ strength: cmp(:>, 10) }], # guarantee strongest flight
+      bet: [{ strength: cmp(:between, 5..10) }], # guarantee brass will trigger, but not strongest flight
+      gimel: [{ type: ThreeDragonAnte::Card::BrassDragon, strength: cmp(:<=, 5) }]
     })
   ] end
 
@@ -40,9 +40,9 @@ RSpec.describe ThreeDragonAnte::Card::BrassDragon do
           *Factory.ante_to_choose_leader(:aleph),
           *Factory.flights(flights: {
             # guarantee aleph has strongest flight, hand has good dragon
-            aleph: [{ strength: proc { _1 > 10 } }, { tags: %i( good dragon), strength: proc { _1 > 10 } }],
-            bet: [{ strength: proc { _1 < 5 } }], # guarantee weakest flight and next player will trigger
-            gimel: [{ type: ThreeDragonAnte::Card::BrassDragon, strength: proc { (5..10).include? _1 } }]
+            aleph: [{ strength: cmp(:>, 10) }, { tags: %i( good dragon), strength: cmp(:>, 10) }],
+            bet: [{ strength: cmp(:between, 5..10) }], # guarantee next player will trigger
+            gimel: [{ type: ThreeDragonAnte::Card::BrassDragon, strength: cmp(:<=, 5) }]
           })
         ] end
 
@@ -60,11 +60,11 @@ RSpec.describe ThreeDragonAnte::Card::BrassDragon do
           *Factory.ante_to_choose_leader(:aleph),
           *Factory.flights(flights: {
             # guarantee aleph has strongest flight, hand has weaker good dragon
-            aleph: [{ strength: proc { _1 > 10 } },
-                    { tags: %i( good dragon), strength: proc { _1 < 5 } },
+            aleph: [{ strength: cmp(:>, 10) },
+                    { tags: %i( good dragon), strength: cmp(:<, 3) },
                     *3.times.map { { is_not: %i( good dragon ) } }],
-            bet: [{ strength: proc { _1 < 5 } }], # guarantee weakest flight and next player will trigger
-            gimel: [{ type: ThreeDragonAnte::Card::BrassDragon, strength: proc { (5..10).include? _1 } }]
+            bet: [{ strength: cmp(:>, 5) }], # guarantee weakest flight and next player will trigger
+            gimel: [{ type: ThreeDragonAnte::Card::BrassDragon, strength: cmp(:<=, 5) }]
           })
         ] end
 

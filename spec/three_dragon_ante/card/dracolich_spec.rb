@@ -2,7 +2,7 @@ RSpec.describe ThreeDragonAnte::Card::Dracolich do
   let(:stacked_deck) do [
     *Factory.ante_to_choose_leader(:aleph),
     *Factory.flights(flights: {
-      aleph: [{ type: ThreeDragonAnte::Card::BlackDragon }],
+      aleph: [{ type: ThreeDragonAnte::Card::RedDragon, strength: cmp(:>=, 10) }],
       bet: [{ type: ThreeDragonAnte::Card::Dracolich }],
       gimel: []
     })
@@ -19,9 +19,13 @@ RSpec.describe ThreeDragonAnte::Card::Dracolich do
       expect(game.players[1].current_choice).not_to be_nil
       expect(game.players[1].current_choice.choices.size).to eq 1
 
-      current_stakes = gambit.stakes.value
-      game.players[1].current_choice.choose! 0 # copy BlackDragon
-      expect(gambit.stakes.value).to eq(current_stakes - 2)
+      opponent_hoard = game.players[0].hoard.value
+      opponent_hand = game.players[0].hand.size
+      player_hand = game.players[1].hand.size
+      game.players[1].current_choice.choose! 0 # copy RedDragon
+      expect(game.players[0].hoard.value).to eq(opponent_hoard - 1)
+      expect(game.players[0].hand.size).to eq(opponent_hand - 1)
+      expect(game.players[1].hand.size).to eq(player_hand + 1)
     end
   end
 end

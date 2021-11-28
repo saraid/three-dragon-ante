@@ -1,11 +1,8 @@
 RSpec.describe ThreeDragonAnte::Card::WhiteDragon do
   let(:stacked_deck) do [
     *Factory.ante_to_choose_leader(:aleph),
-
-    # Then aleph will have a thief
     { type: ThreeDragonAnte::Card::TheFool },
-    # Then bet will play a white dragon
-    { type: ThreeDragonAnte::Card::WhiteDragon, strength: proc { _1 > 3 } },
+    { type: ThreeDragonAnte::Card::WhiteDragon, strength: cmp(:<=, 3) },
   ] end
   let(:target_phase) { [:gambit, 1, :round, 1, :aleph] }
 
