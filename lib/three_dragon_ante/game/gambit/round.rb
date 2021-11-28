@@ -25,7 +25,9 @@ module ThreeDragonAnte
           @cards_played.size == game.players.size
         end
 
-        def run
+        def current_player_takes_turn
+          current_player.buys_cards! if current_player.hand.size <= 1
+
           current_player.generate_choice_from_hand(prompt: :play_card) do |choice|
             @cards_played << PlayerChoice.new(current_player, current_player.hand >> choice)
             gambit.flights[current_player] << choice
@@ -36,6 +38,10 @@ module ThreeDragonAnte
             else
               gambit.flights[current_player].check_special_flight_completion!(gambit, current_player)
               @last_played_strength = choice.strength
+            end
+
+            current_player.choose_one(:buy_cards, :nothing) do |choice|
+              current_player.buy_cards! if choice == :buy_cards
             end
           end
         end

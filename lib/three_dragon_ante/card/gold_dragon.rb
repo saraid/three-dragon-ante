@@ -9,7 +9,7 @@ module ThreeDragonAnte
 
       def trigger_power!(gambit, player)
         gambit.flights[player].select(&:good?).size.times do
-          player.draw_card(gambit.game.deck)
+          player.draw_card!
         end
       end
     end

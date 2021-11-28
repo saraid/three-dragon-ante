@@ -15,7 +15,7 @@ module ThreeDragonAnte
 
         current_flight_strength = gambit.flights[player].strength
         gambit.flights.select { |p, flight| flight.strength > current_flight_strength }.size.times do
-          player.draw_card(gambit.game.deck)
+          player.draw_card!
         end
       end
     end

@@ -50,8 +50,15 @@ module ThreeDragonAnte
         @game << [identifier, :choice, @choices << Choice.new(prompt, choices, &on_choice), @choices.size]
       end
 
-      def draw_card(deck)
+      def draw_card!(deck = game.deck)
         hand << deck.draw! unless hand.size >= MAX_HAND_SIZE
+      end
+
+      def buy_cards!(deck = game.deck)
+        top_card = deck.draw!
+        deck.discarded(top_card)
+
+        draw_card!(deck) until hand.size >= 4
       end
     end
   end

@@ -136,6 +136,12 @@ module ThreeDragonAnte
         @current_phase = :cleanup
         ante.each { game.deck.discarded _1 }
         flights.each { _2.each { |card| game.deck.discarded card } }
+
+        game.players.each do |player|
+          game.players >> player if player.hoard.value <= 0
+          2.times { player.draw_card! }
+        end
+
       end
     end
   end
