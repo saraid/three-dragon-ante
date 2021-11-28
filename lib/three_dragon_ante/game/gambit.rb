@@ -18,7 +18,7 @@ module ThreeDragonAnte
         @stakes = Evented::Integer.new(game) { [_1, :stakes, _2] }
       end
       attr_reader :game, :rounds
-      attr_reader :leader, :flights, :stakes
+      attr_reader :flights, :stakes
 
       def ended?
         current_phase.first != :ante && (stakes.value.zero? || !winner.nil?)
@@ -34,6 +34,10 @@ module ThreeDragonAnte
 
       def players
         game.players
+      end
+
+      def leader
+        @temporary_leader || @leader
       end
 
       def run
@@ -63,6 +67,10 @@ module ThreeDragonAnte
       def reveal_ante
         @current_phase = [:ante, :reveal]
         game << @ante.map(&:card)
+      end
+
+      def temporary_leader=(player)
+        @temporary_leader = player
       end
 
       def choose_leader
@@ -101,6 +109,7 @@ module ThreeDragonAnte
         if @round.nil? || @round.ended?
           @round = Round.new(self).tap(&@rounds.method(:<<))
           @current_phase = proc { [:round, @rounds.size, @round.current_player.identifier] }
+          @temporary_leader = nil
         end
         @round
       end

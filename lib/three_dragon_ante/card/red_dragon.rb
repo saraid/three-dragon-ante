@@ -4,6 +4,13 @@ module ThreeDragonAnte
       def initialize(strength)
         super('Red Dragon', %i( evil dragon ), strength)
       end
+
+      def trigger_power!(gambit, player)
+        opponent, flight = gambit.flights.max_by { _2.strength }
+
+        player.hoard.gain(opponent.hoard.lose(1, to: player))
+        player.hand << (opponent.hand >> opponent.hand.sample)
+      end
     end
   end
 end
