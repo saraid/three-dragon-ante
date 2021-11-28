@@ -43,7 +43,7 @@ module ThreeDragonAnte
               @last_played_strength = choice.strength
             end
 
-            current_player.choose_one(:buy_cards, :nothing) do |choice|
+            current_player.choose_one(:nothing, :buy_cards) do |choice|
               current_player.buy_cards! if choice == :buy_cards
             end
           end
