@@ -1,3 +1,9 @@
+begin
+  require 'simplecov'
+  SimpleCov.start
+rescue LoadError
+end
+
 require "bundler/setup"
 require "three-dragon-ante"
 

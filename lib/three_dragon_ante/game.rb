@@ -3,6 +3,7 @@ require 'logger'
 require_relative './deck'
 require_relative 'game/event'
 require_relative 'game/gambit'
+require_relative 'game/listenable_array'
 require_relative 'game/player'
 
 module ThreeDragonAnte
@@ -13,7 +14,7 @@ module ThreeDragonAnte
       @current_phase = :waiting_for_players
       @deck = Deck.new
       @players = Evented::Array.new(self) { [_1, :player] }
-      @events = []
+      @events = ListenableArray.new
       @event_logger = Logger.new($stdout)
       @gambits = []
     end

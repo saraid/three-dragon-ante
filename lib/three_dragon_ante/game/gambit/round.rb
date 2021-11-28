@@ -55,7 +55,7 @@ module ThreeDragonAnte
         end
 
         def players_leftward_from_current
-          player_order = game.players.dup
+          player_order = game.players.values.dup
           player_order.rotate! until player_order.first == @current_player
           player_order
         end
