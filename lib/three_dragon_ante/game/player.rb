@@ -40,13 +40,13 @@ module ThreeDragonAnte
         @game << [identifier, :choice, @choice = Choice.new(prompt, @hand.values.select(&only), &on_choice)]
       end
 
-      def choose_one(*choices, &block)
+      def choose_one(*choices, prompt: :choose_one, &block)
         on_choice = proc do |choice|
           @game << [:choose, self, choice]
           block.call(choice)
         end
 
-        @game << [identifier, :choice, @choice = Choice.new(:choose_one, choices, &on_choice)]
+        @game << [identifier, :choice, @choice = Choice.new(prompt, choices, &on_choice)]
       end
 
       def draw_card(deck)
