@@ -37,7 +37,7 @@ module ThreeDragonAnte
     end
 
     def trigger_power!(gambit, player)
-      #raise NotImplementedError
+      raise NotImplementedError
     end
 
     def build_copy(new_class, new_strength)

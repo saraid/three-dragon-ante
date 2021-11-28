@@ -1,5 +1,5 @@
 require_relative 'gambit/flight'
-require_relative 'gambit/player_ante'
+require_relative 'gambit/player_choice'
 require_relative 'gambit/round'
 
 module ThreeDragonAnte
@@ -18,7 +18,7 @@ module ThreeDragonAnte
         @stakes = Evented::Integer.new(game) { [_1, :stakes, _2] }
       end
       attr_reader :game, :rounds
-      attr_reader :flights, :stakes
+      attr_reader :leader, :flights, :stakes
 
       def ended?
         current_phase.first != :ante && (stakes.value.zero? || !winner.nil?)
@@ -36,10 +36,6 @@ module ThreeDragonAnte
         game.players
       end
 
-      def leader
-        @temporary_leader || @leader
-      end
-
       def run
         while @leader.nil?
           accept_ante
@@ -54,7 +50,7 @@ module ThreeDragonAnte
       def accept_ante
         players.each do |player|
           player.generate_choice_from_hand(prompt: :for_ante) do |choice|
-            @ante << PlayerAnte.new(player, player.hand >> choice)
+            @ante << PlayerChoice.new(player, player.hand >> choice)
             @ante_cards << choice
           end
         end
@@ -73,9 +69,9 @@ module ThreeDragonAnte
         @temporary_leader = player
       end
 
-      def choose_leader
-        @current_phase = [:ante, :choose_leader]
-        by_strength = @ante.group_by { _1.card.strength }
+      def choose_leader(phase = [:ante, :choose_leader], chosen_cards = @ante)
+        @current_phase = phase
+        by_strength = chosen_cards.group_by { _1.card.strength }
         @per_player_stakes = by_strength.keys.sort.reverse.first
         by_strength.keys.sort.reverse.each do |strength|
           players_at_strength = by_strength[strength].map(&:player)
@@ -107,9 +103,9 @@ module ThreeDragonAnte
 
       def current_round
         if @round.nil? || @round.ended?
-          @round = Round.new(self).tap(&@rounds.method(:<<))
+          choose_leader([:round, @rounds.size, :choose_leader], @rounds.last.cards_played) unless @rounds.empty?
+          @round = Round.new(self, @temporary_leader || @leader).tap(&@rounds.method(:<<))
           @current_phase = proc { [:round, @rounds.size, @round.current_player.identifier] }
-          @temporary_leader = nil
         end
         @round
       end

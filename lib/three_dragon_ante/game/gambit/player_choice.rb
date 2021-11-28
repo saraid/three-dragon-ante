@@ -1,7 +1,7 @@
 module ThreeDragonAnte
   class Game
     class Gambit
-      class PlayerAnte
+      class PlayerChoice
         def initialize(player, card)
           @player, @card = player, card
         end
