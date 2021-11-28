@@ -21,6 +21,18 @@ module ThreeDragonAnte
           return 0 unless strength?
           @values.select(&:dragon?).group_by(&:strength).select { _2.size >= 3 }.first.first
         end
+
+        def has_dragon_god?
+          @values.any?(&:god?)
+        end
+
+        def can_win?
+          dragon_god = @values.find(&:dragon_god?)
+          return true if dragon_god.nil?
+
+          return true if dragon_god.evil? && @values.none?(&:good?)
+          return true if dragon_god.good? && @values.none?(&:evil?)
+        end
       end
     end
   end

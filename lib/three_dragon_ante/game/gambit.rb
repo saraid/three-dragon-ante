@@ -114,7 +114,7 @@ module ThreeDragonAnte
         return if @rounds.select(&:ended?).size < 3
 
         druid_in_flight = @flights.values.map(&:values).any? { Card::TheDruid === _1 }
-        by_strength = @flights.group_by { _2.strength }
+        by_strength = @flights.select(&:can_win?).group_by { _2.strength }
         winning_flight_strength = by_strength.keys.sort.send(druid_in_flight ? :first : :last)
         return if by_strength[winning_flight_strength].size > 1
 
