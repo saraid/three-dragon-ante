@@ -6,7 +6,7 @@ end
 module ThreeDragonAnte
   class Card
     include Refinements::Inspection
-    GODS = %i( Bahamut Tiamut )
+    GODS = %i( Bahamut Tiamat )
     MORTALS = %i(TheArchmage TheDragonslayer TheDruid TheFool ThePriest ThePrincess TheThief)
     UNIQUES = %i(Dracolich)
 
