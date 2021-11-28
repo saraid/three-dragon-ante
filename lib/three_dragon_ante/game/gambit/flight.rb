@@ -3,42 +3,34 @@ module ThreeDragonAnte
     class Gambit
       class Flight < Evented::SetOfCards
         def check_special_flight_completion!(gambit, player)
-          @special_completed ||= { color: false, strength: false }
-          if !@special_completed[:color] && color?
+          @special_completed ||= { color: [], strength: [] }
+          if color = (color_flights.keys - @special_completed[:color]).first
+            game << [player, :color_flight, color_flights[color]]
             @special_completed[:color] = true
-            (gambit.game.players.value - player).each do |opponent|
-              cash = payment_for_color_flight
-              player.gain opponent.hoard.lose(cash, to: player)
+            gambit.players.except(player).each do |opponent|
+              cash = color_flights[color][1].strength
+              player.hoard.gain opponent.hoard.lose(cash, to: player)
             end
-            game << [player, :color_flight]
           end
-          if !@special_completed[:strength] && color?
+          if strength_value = (strength_flights.keys - @special_completed[:strength]).first
+            game << [player, :strength_flight, strength_flights[strength_value]]
             @special_completed[:strength] = true
-            player.hoard.gain(gambit.stakes.lose(payment_for_strength_flight))
+            player.hoard.gain(gambit.stakes.lose(strength_value))
             2.times do
               break if player.hand.size >= Game::Player::MAX_HAND_SIZE
               player.choose_one(*gambit.ante) do |choice|
                 player.hand << (gambit.ante >> choice)
               end
             end
-            game << [player, :strength_flight]
           end
         end
 
-        def color?
-          @values.select(&:dragon?).group_by(&:class).any? { _2.size == 3 }
+        def color_flights
+          @values.select(&:dragon?).group_by(&:class).select { _2.size == 3 }
         end
 
-        def payment_for_color_flight
-          @values.select(&:dragon?).group_by(&:class).select { _2.size == 3 }.values.first[1].strength
-        end
-
-        def strength?
-          @values.select(&:dragon?).group_by(&:strength).any? { _2.size == 3 }
-        end
-
-        def payment_for_strength_flight
-          @values.select(&:dragon?).group_by(&:strength).select { _2.size == 3 }.first.first
+        def strength_flights
+          @values.select(&:dragon?).group_by(&:strength).select { _2.size == 3 }
         end
 
         def has_dragon_god?

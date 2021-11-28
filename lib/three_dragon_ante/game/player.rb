@@ -14,6 +14,7 @@ module ThreeDragonAnte
         @game = game
         @hoard = Hoard.new(game)
         @hand = Evented::SetOfCards.new(game) { [:player_hand, identifier] }
+        @choices = Choice::Array.new
       end
       attr_reader :game
       attr_writer :identifier
@@ -24,7 +25,7 @@ module ThreeDragonAnte
       end
 
       def current_choice
-        @choice unless @choice&.resolved?
+        @choices.first
       end
 
       def custom_inspection
@@ -37,7 +38,7 @@ module ThreeDragonAnte
           block.call(choice)
         end
 
-        @game << [identifier, :choice, @choice = Choice.new(prompt, @hand.values.select(&only), &on_choice)]
+        @game << [identifier, :choice, @choices << Choice.new(prompt, @hand.values.select(&only), &on_choice)]
       end
 
       def choose_one(*choices, prompt: :choose_one, &block)
@@ -46,15 +47,11 @@ module ThreeDragonAnte
           block.call(choice)
         end
 
-        @game << [identifier, :choice, @choice = Choice.new(prompt, choices, &on_choice)]
+        @game << [identifier, :choice, @choices << Choice.new(prompt, choices, &on_choice)]
       end
 
       def draw_card(deck)
         hand << deck.draw! unless hand.size >= MAX_HAND_SIZE
-      end
-
-      def <<(choice)
-        @game << @choice = choice
       end
     end
   end

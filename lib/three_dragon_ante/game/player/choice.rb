@@ -1,3 +1,5 @@
+require_relative 'choice/array'
+
 module ThreeDragonAnte
   class Game
     class Player
@@ -21,6 +23,7 @@ module ThreeDragonAnte
         end
 
         def choose!(choice_or_index)
+          @resolved = true
           case choice_or_index
           when NilClass then @on_fail.call
           when Integer then @on_choice.call(@choices[choice_or_index])
@@ -28,7 +31,6 @@ module ThreeDragonAnte
             raise ArgumentError unless @choices.include?(choice_or_index)
             @on_choice.call(choice_or_index)
           end
-          @resolved = true
         end
 
         def resolved?

@@ -1,16 +1,12 @@
 RSpec.describe ThreeDragonAnte::Card::TheThief do
   let(:stacked_deck) do [
     *Factory.ante_to_choose_leader(:aleph),
-
-    # Then aleph will play the thief
     { type: ThreeDragonAnte::Card::TheThief },
   ] end
   let(:target_phase) { [:gambit, 1, :round, 1, :aleph] }
 
   let(:game) { Factory.game(setup_until: target_phase, stacked_deck: stacked_deck) }
   let(:gambit) { game.current_gambit }
-
-  before(:each) { gambit.current_round.run }
 
   context 'when triggered' do
     it 'should take 7 gold from stakes and discard a card' do

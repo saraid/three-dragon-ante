@@ -14,7 +14,7 @@ module ThreeDragonAnte
         player.hoard.gain cash
 
         player.generate_choice_from_hand(prompt: :discard_one) do |choice|
-          player.hand >> choice
+          gambit.game.deck.discarded(player.hand >> choice)
         end
       end
     end
