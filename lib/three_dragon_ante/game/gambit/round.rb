@@ -34,6 +34,7 @@ module ThreeDragonAnte
             if ThreeDragonAnte::Card::CopperDragon === choice
               @last_played_strength = gambit.flights[current_player].values.last.strength
             else
+              gambit.flights[current_player].check_special_flight_completion!(gambit, current_player)
               @last_played_strength = choice.strength
             end
           end
