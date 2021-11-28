@@ -9,7 +9,7 @@ module ThreeDragonAnte
         cash = player.hoard.lose 1
         gambit.stakes.gain cash
 
-        options = gambit.flight[player].values.select(&:good_dragon?).yield_self do |flight|
+        options = gambit.flights[player].values.select(&:good_dragon?).yield_self do |flight|
           flight.permutation(flight.size)
         end
 
