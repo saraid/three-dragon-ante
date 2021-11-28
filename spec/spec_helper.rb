@@ -2,7 +2,7 @@ require "bundler/setup"
 require "three-dragon-ante"
 
 require_relative './fixture_helper'
-require_relative './support/proc'
+require_relative './support/arithmetic_proc'
 Dir.each_child(File.join(__dir__, 'factories')) do |factory|
   next unless factory.end_with?('.rb')
   require_relative "./factories/#{factory}"
