@@ -8,7 +8,8 @@ module ThreeDragonAnte
       @deck = []
       @discarded = []
 
-     %i[TheArchmage Bahamut Dracolich Dragonslayer TheDruid TheFool ThePriest ThePrincess TheThief Tiamat].each { |name|
+     %i[TheArchmage Bahamut Dracolich TheDragonslayer TheDruid TheFool ThePriest ThePrincess TheThief Tiamat].each { |name|
+       puts name
        @deck << Card.const_get(name).new if Card.constants.include? name
      }
 
@@ -70,6 +71,7 @@ module ThreeDragonAnte
 
       @deck.find { |card| conditions.all? { |condition| condition.call(card) }}.tap do |card|
         raise 'Could not find card' if card.nil?
+        puts "pulled #{card.inspect}"
         @deck.delete(card)
       end
     end

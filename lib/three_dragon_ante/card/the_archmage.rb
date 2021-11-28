@@ -9,8 +9,8 @@ module ThreeDragonAnte
         cash = player.hoard.lose 1
         gambit.stakes.gain cash
 
-        player.choose_one(*gambit.ante.values, prompt: :copy_ante_power) do |choice|
-          copy(choice.class, strength).trigger_power!(gambit, player)
+        player.choose_one(*gambit.ante.values.map(&:class), prompt: :copy_ante_power) do |choice|
+          build_copy(choice, strength).trigger_power!(gambit, player)
         end
       end
     end

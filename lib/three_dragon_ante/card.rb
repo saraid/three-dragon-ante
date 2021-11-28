@@ -36,7 +36,7 @@ module ThreeDragonAnte
       #raise NotImplementedError
     end
 
-    def copy(new_class, new_strength)
+    def build_copy(new_class, new_strength)
       if new_class.instance_method(:initialize).arity == 1 then instance = new_class.new(new_strength)
       else instance = new_class.new.tap { _1.strength = new_strength }
       end
