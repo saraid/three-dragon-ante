@@ -12,10 +12,11 @@ module ThreeDragonAnte
           @player_order = player_order.to_enum
 
           @current_player = @player_order.next
+          @player_left_of_current = player_order[player_order.index(@current_player)]
           @last_played_strength = 0
         end
         attr_reader :game, :gambit
-        attr_reader :current_player
+        attr_reader :current_player, :player_left_of_current
 
         def started?
           @cards_played.size > 0
@@ -40,7 +41,9 @@ module ThreeDragonAnte
         end
 
         def next_player
-          @current_player = @player_order.next unless ended?
+          return if ended?
+          @player_left_of_current = @current_player
+          @current_player = @player_order.next
         end
 
         def advance

@@ -6,6 +6,10 @@ end
 module ThreeDragonAnte
   class Card
     include Refinements::Inspection
+    GODS = %i( Bahamut Tiamut )
+    MORTALS = %i(TheArchmage TheDragonslayer TheDruid TheFool ThePriest ThePrincess TheThief)
+    UNIQUES = %i(Dracolich)
+
     TAGS = %i( dragon mortal good evil god undead)
 
     def initialize(name, tags, strength)

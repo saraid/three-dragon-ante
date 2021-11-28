@@ -12,7 +12,7 @@ module ThreeDragonAnte
         end.keys
 
         opponents.each do |opponent|
-          cash = opponent.hoard.lose 10
+          cash = opponent.hoard.lose(10, to: player)
           player.hoard.gain cash
         end
       end

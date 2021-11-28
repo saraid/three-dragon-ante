@@ -8,8 +8,7 @@ module ThreeDragonAnte
       @deck = []
       @discarded = []
 
-     %i[TheArchmage Bahamut Dracolich TheDragonslayer TheDruid TheFool ThePriest ThePrincess TheThief Tiamat].each { |name|
-       puts name
+     (Card::GODS + Card::MORTALS + Card::UNIQUES).each { |name|
        @deck << Card.const_get(name).new if Card.constants.include? name
      }
 

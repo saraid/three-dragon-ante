@@ -1,52 +1,49 @@
-RSpec.describe ThreeDragonAnte::Card::BrassDragon do
-  let(:target_phase) { [:gambit, 1, :round, 1, :gimel] }
+RSpec.describe ThreeDragonAnte::Card::GreenDragon do
   let(:stacked_deck) do [
     *Factory.ante_to_choose_leader(:aleph),
     *Factory.flights(flights: {
-      aleph: [{ strength: proc { _1 > 10 } }], # guarantee strongest flight
-      bet: [{ strength: proc { _1 < 5 } }], # guarantee weakest flight and next player will trigger
-      gimel: [{ type: ThreeDragonAnte::Card::BrassDragon, strength: proc { (5..10).include? _1 } }]
+      aleph: [{ type: ThreeDragonAnte::Card::BlackDragon, strength: proc { _1 < 5 } }],
+      bet: [{ type: ThreeDragonAnte::Card::GreenDragon, strength: proc { _1 > 5 } }],
+      gimel: []
     })
   ] end
-
-  let(:game) { Factory.game(setup_until: target_phase, stacked_deck: stacked_deck) }
+  let(:game) { Factory.game(setup_until: [:gambit, 1, :round, 1, :bet], stacked_deck: stacked_deck) }
   let(:gambit) { game.current_gambit }
 
   context 'when triggered' do
     let(:opponent) { game.players[0] }
-    let(:player) { game.players[2] }
+    let(:player) { game.players[1] }
 
     before(:each) do
       gambit.current_round.run
-      player.current_choice.choose! 0 # play BrassDragon
+      player.current_choice.choose! 0 # play GreenDragon
     end
 
-    it 'offers a choice to opponent with strongest flight' do
+    it 'offers a choice to opponent to the left' do
       expect(opponent.current_choice.prompt).to eq :choose_one
       expect(opponent.current_choice.choices.size).to eq 2
     end
 
-    context 'and the opponent chooses to give a stronger good dragon' do
+    context 'and the opponent chooses to give a weaker evil dragon' do
       before(:each) do
         opponent.current_choice.choose! 1 # choose to give
       end
 
-      it 'should offer a choice of stronger good dragons' do
+      it 'should offer a choice of weaker evil dragons' do
         expect(opponent.current_choice.prompt).to eq :choose_to_give
       end
 
-      context 'and has a stronger good dragon' do
+      context 'and has a weaker evil dragon' do
         let(:stacked_deck) do [
           *Factory.ante_to_choose_leader(:aleph),
           *Factory.flights(flights: {
-            # guarantee aleph has strongest flight, hand has good dragon
-            aleph: [{ strength: proc { _1 > 10 } }, { tags: %i( good dragon), strength: proc { _1 > 10 } }],
-            bet: [{ strength: proc { _1 < 5 } }], # guarantee weakest flight and next player will trigger
-            gimel: [{ type: ThreeDragonAnte::Card::BrassDragon, strength: proc { (5..10).include? _1 } }]
+            aleph: [{ tags: %i( evil dragon), strength: proc { _1 < 5 } }],
+            bet: [{ type: ThreeDragonAnte::Card::GreenDragon, strength: proc { _1 > 5 } }],
+            gimel: []
           })
         ] end
 
-        it 'should successfully give a stronger good dragon' do
+        it 'should successfully give a weaker evil dragon' do
           current_player_hand = player.hand.size
           current_opponent_hand = opponent.hand.size
           opponent.current_choice.choose!(0)
@@ -55,16 +52,13 @@ RSpec.describe ThreeDragonAnte::Card::BrassDragon do
         end
       end
 
-      context 'and does not have a stronger good dragon' do
+      context 'and does not have a weaker evil dragon' do
         let(:stacked_deck) do [
           *Factory.ante_to_choose_leader(:aleph),
           *Factory.flights(flights: {
-            # guarantee aleph has strongest flight, hand has weaker good dragon
-            aleph: [{ strength: proc { _1 > 10 } },
-                    { tags: %i( good dragon), strength: proc { _1 < 5 } },
-                    *3.times.map { { is_not: %i( good dragon ) } }],
-            bet: [{ strength: proc { _1 < 5 } }], # guarantee weakest flight and next player will trigger
-            gimel: [{ type: ThreeDragonAnte::Card::BrassDragon, strength: proc { (5..10).include? _1 } }]
+            aleph: [{ strength: proc { _1 < 6 }}, *4.times.map {{ strength: proc { _1 > 6 } }}],
+            bet: [{ type: ThreeDragonAnte::Card::GreenDragon, strength: 6 }],
+            gimel: []
           })
         ] end
 
