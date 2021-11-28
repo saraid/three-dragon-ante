@@ -52,8 +52,9 @@ module ThreeDragonAnte
       @deck[0...num]
     end
 
-    def pull_card(type: nil, strength: nil, tags: [], is_not: [])
+    def pull_card(type: nil, strength: nil, tags: [], is_not: [], no_manip: [])
       not_types, not_tags = is_not.group_by(&:class).values_at(Class, Symbol)
+      no_manip.map! { :"manipulates_#{_1}?" }
 
       conditions = []
       conditions << proc { type === _1 } unless type.nil?
@@ -66,19 +67,24 @@ module ThreeDragonAnte
         end
       conditions << proc { |card| !not_types.any? { |klass| klass === card } } unless not_types.nil?
       conditions << proc { |card| !not_tags.all? { |tag| card.tags.include?(tag) } } unless not_tags.nil?
+      conditions << proc { |card| !no_manip.any? { |manip| card.send(manip) } } unless no_manip.empty?
       conditions.compact!
 
       @deck.find { |card| conditions.all? { |condition| condition.call(card) }}.tap do |card|
-        raise 'Could not find card' if card.nil?
-        puts "pulled #{card.inspect}"
-        @deck.delete(card)
+        if card.nil?
+          puts({ type: type, strength: strength, tags: tags, is_not: is_not, no_manip: no_manip }.reject { _2.nil? || (_2.respond_to?(:empty?) && _2.empty?) }.compact.inspect)
+          raise 'Could not find card'
+        else
+          puts "pulled #{card.inspect}"
+          @deck.delete(card)
+        end
       end
     end
 
-    def stack!(type: nil, strength: nil, tags: [])
-      card = pull_card(type: type, strength: strength, tags: tags)
+    def stack!(**kwargs)
+      card = pull_card(**kwargs)
       reshuffle! if card.nil?
-      card ||= pull_card(type: type, strength: strength, tags: tags)
+      card ||= pull_card(**kwargs)
       @deck.unshift(card)
       :ok
     end

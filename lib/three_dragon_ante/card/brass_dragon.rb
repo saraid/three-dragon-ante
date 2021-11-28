@@ -5,6 +5,9 @@ module ThreeDragonAnte
         super('Brass Dragon', %i( good dragon ), strength)
       end
 
+      manipulates_hands!
+      manipulates_hoards!
+
       def trigger_power!(gambit, player)
         opponent, _flight = gambit.flights.reject { _1 == player }.max_by { _2.strength }
         opponent.choose_one(:pay_me_5_gold, :give_stronger_good_dragon) do |first_choice|

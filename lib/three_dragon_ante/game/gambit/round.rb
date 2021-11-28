@@ -7,7 +7,7 @@ module ThreeDragonAnte
           @gambit = gambit
           @cards_played = []
 
-          player_order = game.players.dup
+          player_order = game.players.values.dup
           player_order.rotate! until player_order.first == leader
           @player_order = player_order.to_enum
 

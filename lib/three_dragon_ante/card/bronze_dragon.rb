@@ -5,6 +5,9 @@ module ThreeDragonAnte
         super('Bronze Dragon', %i( good dragon ), strength)
       end
 
+      manipulates_ante!
+      manipulates_hands!
+
       def trigger_power!(gambit, player)
         cards_to_take = [Game::Player::MAX_HAND_SIZE - player.hand.size, 2].min
         return if cards_to_take.zero?

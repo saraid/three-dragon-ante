@@ -5,6 +5,8 @@ module ThreeDragonAnte
         super('Gold Dragon', %i( good dragon ), strength)
       end
 
+      manipulates_hands!
+
       def trigger_power!(gambit, player)
         gambit.flights[player].select(&:good?).size.times do
           player.draw_card(gambit.game.deck)

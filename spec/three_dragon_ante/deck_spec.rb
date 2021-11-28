@@ -60,5 +60,12 @@ RSpec.describe ThreeDragonAnte::Deck do
         expect(actual.tags).not_to include :dragon
       end
     end
+
+    context 'with no_manip parameter' do
+      it 'should remove no_manip[hands]' do
+        actual = subject.pull_card(no_manip: %i[hands])
+        expect(actual).not_to be_manipulates_hands
+      end
+    end
   end
 end

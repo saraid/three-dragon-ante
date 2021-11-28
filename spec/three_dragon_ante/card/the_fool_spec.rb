@@ -29,12 +29,15 @@ RSpec.describe ThreeDragonAnte::Card::TheFool do
         *Factory.ante_to_choose_leader(:aleph),
 
         # Then aleph will play the fool
-        { strength: proc { _1 < 5 } }, # max strength: 4 + Fool (3) = 7
-        { strength: proc { _1 > 7 } },
-        { strength: proc { _1 > 7 } },
+        { no_manip: %i(hands), strength: proc { _1 < 5 } }, # max strength: 4 + Fool (3) = 7
+        { no_manip: %i(hands), strength: proc { _1 > 7 } },
+        { no_manip: %i(hands), strength: proc { _1 > 7 } },
 
+        # Then bet/gimel will lead and play whatever.
         # Then aleph will play the fool
         { type: ThreeDragonAnte::Card::TheFool },
+        { no_manip: %i(hands), strength: cmp(:<, 3) }, # guarantee Fool power will trigger
+        { no_manip: %i(hands), strength: cmp(:<, 3) }, # guarantee Fool power will trigger
       ] end
 
       it 'should draw cards for each player with a stronger flight' do

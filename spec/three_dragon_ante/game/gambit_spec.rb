@@ -17,17 +17,17 @@ RSpec.describe ThreeDragonAnte::Game::Gambit do
     end
   end
 
-  describe '#ante_ready?' do
+  describe '#ante_ready_to_reveal?' do
     let(:game) { Factory.game(setup_until: [:gambit, 1, :ante, :choice]) }
     it 'works' do
       subject.accept_ante
 
       player_aleph.current_choice.choose!(0)
-      expect(subject.ante_ready?).to eq false
+      expect(subject.ante_ready_to_reveal?).to eq false
       player_bet.current_choice.choose!(0)
-      expect(subject.ante_ready?).to eq false
+      expect(subject.ante_ready_to_reveal?).to eq false
       player_gimel.current_choice.choose!(0)
-      expect(subject.ante_ready?).to eq true
+      expect(subject.ante_ready_to_reveal?).to eq true
     end
   end
 
@@ -72,6 +72,22 @@ RSpec.describe ThreeDragonAnte::Game::Gambit do
         expect(subject.leader.identifier).to eq :bet
       end
     end
+
+    context 'when everyone ties' do
+      let(:game) do
+        Factory.game(setup_until: [:gambit, 1, :ante, :choose_leader], stacked_deck: [
+          { strength: 10 },
+          { strength: 10 },
+          { strength: 10 },
+        ])
+      end
+
+      it 'no choice' do
+        subject.choose_leader
+
+        expect(subject.leader).to be_nil
+      end
+    end
   end
 
   describe '#pay_stakes' do
@@ -90,15 +106,15 @@ RSpec.describe ThreeDragonAnte::Game::Gambit do
     let(:stacked_deck) do [
       *Factory.ante_to_choose_leader(:aleph),
       *Factory.flights(player_order: %i( aleph bet gimel ), flights: {
-        aleph: [ { strength: 10 }, { strength: 5 }, { strength: 3 } ], # strength=18
-        bet:   [ { strength:  9 }, { strength: 9 }, { strength: 1 } ], # strength=19
-        gimel: [ { strength: 11 }, { strength: 3 }, { strength: 2 } ], # strength=16
+        aleph: [ { strength:  8 }, { strength: 5 }, { strength: 3 } ].each { _1[:no_manip] = %i(hands) }, # strength=16
+        bet:   [ { strength:  9 }, { strength: 9 }, { strength: 1 } ].each { _1[:no_manip] = %i(hands) }, # strength=19
+        gimel: [ { strength: 11 }, { strength: 3 }, { strength: 2 } ].each { _1[:no_manip] = %i(hands) }, # strength=16
       })
     ] end
     let(:game) { Factory.game(setup_until: [:gambit, 1, :win_stakes], stacked_deck: stacked_deck) }
 
     it 'should be bet' do
-      expect(subject.winner.identifier).to be :bet
+      expect(subject.winner).to be game.players[1]
     end
   end
 end

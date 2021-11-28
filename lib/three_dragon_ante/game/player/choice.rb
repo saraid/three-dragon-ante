@@ -20,9 +20,13 @@ module ThreeDragonAnte
           " #{@choices.size} choices"
         end
 
-        def choose!(index)
-          if index.nil? then @on_fail.call
-          else @on_choice.call(@choices[index])
+        def choose!(choice_or_index)
+          case choice_or_index
+          when NilClass then @on_fail.call
+          when Integer then @on_choice.call(@choices[choice_or_index])
+          else
+            raise ArgumentError unless @choices.include?(choice_or_index)
+            @on_choice.call(choice_or_index)
           end
           @resolved = true
         end

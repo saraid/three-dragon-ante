@@ -5,6 +5,8 @@ module ThreeDragonAnte
         super('Copper Dragon', %i( good dragon ), strength)
       end
 
+      manipulates_everything!
+
       def trigger_power!(gambit, player)
         replacement = gambit.game.deck.draw!
         gambit.flights[player] >> self

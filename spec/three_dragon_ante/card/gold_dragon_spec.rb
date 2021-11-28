@@ -1,12 +1,6 @@
 RSpec.describe ThreeDragonAnte::Card::GoldDragon do
   let(:stacked_deck) do [
-    # We want aleph to go first, so we give them the highest card.
-    { strength: proc { _1 == 13 } },
-    # bet and gimel get lower strength cards
-    { strength: proc { _1 < 13 } },
-    { strength: proc { _1 < 13 } },
-
-    # Then aleph will play a gold dragon
+    *Factory.ante_to_choose_leader(:aleph),
     { type: ThreeDragonAnte::Card::GoldDragon },
   ] end
 
@@ -26,14 +20,14 @@ RSpec.describe ThreeDragonAnte::Card::GoldDragon do
 
     context 'when there is already a good dragon in flight' do
       let(:stacked_deck) do [
-        *Factory.ante_to_choose_leader(:aleph),
+        *Factory.ante_to_choose_leader(:aleph, but_not: ThreeDragonAnte::Card::GoldDragon),
 
         # Then aleph will play a gold dragon
-        { type: ThreeDragonAnte::Card::GoldDragon },
+        { type: ThreeDragonAnte::Card::GoldDragon, strength: cmp(:>, 5) },
         # Then bet will play a non-gold dragon
-        { type: ThreeDragonAnte::Card::BlackDragon },
+        { type: ThreeDragonAnte::Card::BlackDragon, strength: cmp(:<=, 5) },
         # Then gimel will play a non-gold dragon
-        { type: ThreeDragonAnte::Card::BlackDragon },
+        { type: ThreeDragonAnte::Card::BlackDragon, strength: cmp(:<=, 5) },
 
         # Then aleph will play a gold dragon
         { type: ThreeDragonAnte::Card::GoldDragon },

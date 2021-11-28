@@ -5,6 +5,9 @@ module ThreeDragonAnte
         super('Green Dragon', %i( evil dragon ), strength)
       end
 
+      manipulates_hands!
+      manipulates_hoards!
+
       def trigger_power!(gambit, player)
         opponent = gambit.current_round.player_left_of_current
 

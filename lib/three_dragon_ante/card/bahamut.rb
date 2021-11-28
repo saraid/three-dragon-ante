@@ -5,6 +5,8 @@ module ThreeDragonAnte
         super('Bahamut', %i( good dragon god ), 13)
       end
 
+      manipulates_hoards!
+
       def trigger_power!(gambit, player)
         opponents = gambit.flights.select do |opponent, flight|
           next if opponent == player

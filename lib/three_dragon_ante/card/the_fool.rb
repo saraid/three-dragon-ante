@@ -5,6 +5,10 @@ module ThreeDragonAnte
         super('The Fool', %i( mortal ), 3)
       end
 
+      manipulates_hands!
+      manipulates_hoards!
+      manipulates_stakes!
+
       def trigger_power!(gambit, player)
         cash = player.hoard.lose 1
         gambit.stakes.gain cash

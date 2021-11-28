@@ -56,8 +56,12 @@ module ThreeDragonAnte
         end
       end
 
-      def ante_ready?
+      def ante_ready_to_reveal?
         @ante.size == players.size
+      end
+
+      def leader_determined?
+        !!@leader
       end
 
       def reveal_ante
@@ -114,7 +118,7 @@ module ThreeDragonAnte
         return if @rounds.select(&:ended?).size < 3
 
         druid_in_flight = @flights.values.map(&:values).any? { Card::TheDruid === _1 }
-        by_strength = @flights.select(&:can_win?).group_by { _2.strength }
+        by_strength = @flights.select { _2.can_win? }.group_by { _2.strength }
         winning_flight_strength = by_strength.keys.sort.send(druid_in_flight ? :first : :last)
         return if by_strength[winning_flight_strength].size > 1
 
@@ -126,6 +130,12 @@ module ThreeDragonAnte
         @current_phase = :distribute_stakes
         puts @flights.map { |player, flight| "#{player.identifier} (#{flight.strength}): #{flight.inspect}" }
         @winner.hoard.gain @stakes.value
+      end
+
+      def cleanup
+        @current_phase = :cleanup
+        ante.each { game.deck.discarded _1 }
+        flights.each { _2.each { |card| game.deck.discarded card } }
       end
     end
   end

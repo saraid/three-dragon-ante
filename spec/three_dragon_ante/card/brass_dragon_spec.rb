@@ -28,7 +28,7 @@ RSpec.describe ThreeDragonAnte::Card::BrassDragon do
 
     context 'and the opponent chooses to give a stronger good dragon' do
       before(:each) do
-        opponent.current_choice.choose! 1 # choose to give
+        opponent.current_choice.choose! :give_stronger_good_dragon
       end
 
       it 'should offer a choice of stronger good dragons' do
@@ -82,7 +82,7 @@ RSpec.describe ThreeDragonAnte::Card::BrassDragon do
       it 'should pay the player 5 from opponent hoard' do
         current_opponent_hoard = opponent.hoard.value
         current_player_hoard = player.hoard.value
-        opponent.current_choice.choose! 0 # choose to pay
+        opponent.current_choice.choose! :pay_me_5_gold
         expect(opponent.hoard.value).to eq(current_opponent_hoard - 5)
         expect(player.hoard.value).to eq(current_player_hoard + 5)
       end

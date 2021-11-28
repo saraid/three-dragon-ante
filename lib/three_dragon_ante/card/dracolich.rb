@@ -5,6 +5,8 @@ module ThreeDragonAnte
         super('Dracolich', %i(undead dragon), 10)
       end
 
+      manipulates_everything!
+
       def trigger_power!(gambit, player)
         options = gambit.flights.values.map(&:values).flatten.select { _1.evil? }.map(&:class)
         player.choose_one(*options, prompt: :copy_evil_power) do |choice|

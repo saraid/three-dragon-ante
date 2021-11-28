@@ -5,6 +5,8 @@ module ThreeDragonAnte
         super('The Archmage', %i( mortal ), 9)
       end
 
+      manipulates_everything!
+
       def trigger_power!(gambit, player)
         cash = player.hoard.lose 1
         gambit.stakes.gain cash

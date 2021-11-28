@@ -4,7 +4,7 @@ module Factory
       player_count.times { |i| game.players << Factory.player(game, PLAYER_IDENTIFIERS[i]) }
 
       game.deck.stack_set! stacked_deck
-      #puts game.deck.peek(22)
+      #puts game.deck.peek(stacked_deck.size)
 
       setup_actions = [
         proc { game.setup! },
@@ -23,7 +23,11 @@ module Factory
       round_actions = [
         proc { game.current_gambit.current_round.run },
         proc { game.current_gambit.current_round.current_player.current_choice.choose!(0) },
-        proc { game.current_choices.values.each {  _1.choose!(0) } until game.current_choices.empty? },
+        proc do
+          game.current_choices.values.each do
+            _1.choose!(_1.choices.empty? ? nil : 0) 
+          end until game.current_choices.empty?
+        end,
         proc { game.current_gambit.current_round.next_player if game.current_gambit.current_round.started? },
       ]
 
@@ -34,6 +38,7 @@ module Factory
 
       gambit_end_actions = [
         proc { game.current_gambit.distribute_stakes },
+        proc { game.current_gambit.cleanup },
       ]
 
       gambit_end_actions.each do |action|

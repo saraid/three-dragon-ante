@@ -5,6 +5,8 @@ module ThreeDragonAnte
         super('The Princess', %i( mortal ), 4)
       end
 
+      manipulates_everything!
+
       def trigger_power!(gambit, player)
         cash = player.hoard.lose 1
         gambit.stakes.gain cash

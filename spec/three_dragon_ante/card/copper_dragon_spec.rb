@@ -1,7 +1,9 @@
 RSpec.describe ThreeDragonAnte::Card::CopperDragon do
   let(:stacked_deck) do [
     *Factory.ante_to_choose_leader(:aleph),
-    *Factory.flights(flights: { aleph: [{ type: ThreeDragonAnte::Card::CopperDragon }], bet: [], gimel: [] }),
+    *Factory.flights(stack_hands: true, flights: {
+      aleph: [{ type: ThreeDragonAnte::Card::CopperDragon }], bet: [], gimel: []
+    }),
     { type: ThreeDragonAnte::Card::BlackDragon }
   ] end
   let(:game) { Factory.game(setup_until: [:gambit, 1, :round, 1, :aleph], stacked_deck: stacked_deck) }

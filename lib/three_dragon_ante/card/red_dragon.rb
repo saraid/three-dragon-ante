@@ -5,6 +5,9 @@ module ThreeDragonAnte
         super('Red Dragon', %i( evil dragon ), strength)
       end
 
+      manipulates_hoards!
+      manipulates_hands!
+
       def trigger_power!(gambit, player)
         opponent, flight = gambit.flights.reject { player == _1 }.max_by { _2.strength }
 

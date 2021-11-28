@@ -5,6 +5,10 @@ module ThreeDragonAnte
         super('The Dragonslayer', %i( mortal ), 8)
       end
 
+      manipulates_flights!
+      manipulates_hoards!
+      manipulates_stakes!
+
       def trigger_power!(gambit, player)
         cash = player.hoard.lose 1
         gambit.stakes.gain cash
