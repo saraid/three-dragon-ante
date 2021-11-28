@@ -10,7 +10,7 @@ module ThreeDragonAnte
         gambit.stakes.gain cash
 
         player.choose_one(*gambit.ante.values, prompt: :copy_ante_power) do |choice|
-          choice.method(:trigger_power!).bind(self).call(gambit, player)
+          copy(choice.class, strength).trigger_power!(gambit, player)
         end
       end
     end

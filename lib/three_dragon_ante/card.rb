@@ -13,6 +13,8 @@ module ThreeDragonAnte
       @tags = tags
     end
     attr_reader :name, :strength, :tags
+    attr_writer :strength
+    protected :strength=
 
     TAGS.each do |tag|
       define_method(:"#{tag}?") { @tags.include? tag }
@@ -32,6 +34,12 @@ module ThreeDragonAnte
 
     def trigger_power!(gambit, player)
       #raise NotImplementedError
+    end
+
+    def copy(new_class, new_strength)
+      if new_class.instance_method(:initialize).arity == 1 then instance = new_class.new(new_strength)
+      else instance = new_class.new.tap { _1.strength = new_strength }
+      end
     end
   end
 end
