@@ -15,6 +15,12 @@ module ThreeDragonAnte
           if !@special_completed[:strength] && color?
             @special_completed[:strength] = true
             player.hoard.gain(gambit.stakes.lose(payment_for_strength_flight))
+            2.times do
+              break if player.hand.size >= Game::Player::MAX_HAND_SIZE
+              player.choose_one(*gambit.ante) do |choice|
+                player.hand << (gambit.ante >> choice)
+              end
+            end
             game << [player, :strength_flight]
           end
         end
