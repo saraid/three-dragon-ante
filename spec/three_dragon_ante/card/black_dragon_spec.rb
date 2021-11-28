@@ -1,11 +1,7 @@
 RSpec.describe ThreeDragonAnte::Card::BlackDragon do
   let(:game) do
     Factory.game(setup_until: [:gambit, 1, :round, 1, :aleph], stacked_deck: [
-      # We want aleph to go first, so we give them the highest card.
-      { strength: proc { _1 == 13 } },
-      # bet and gimel get lower strength cards
-      { strength: proc { _1 < 13 } },
-      { strength: proc { _1 < 13 } },
+      *Factory.ante_to_choose_leader(:aleph),
 
       # Then aleph will play a black dragon
       { type: ThreeDragonAnte::Card::BlackDragon },

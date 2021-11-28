@@ -9,6 +9,7 @@ module ThreeDragonAnte
         @game = game
         @current_phase = [:ante, :choice]
         @ante = []
+        @ante_cards = Evented::SetOfCards.new(game) { [:ante] }
         @rounds = []
         @flights = game.players.zip([]).to_h.transform_values.with_index do |_value, index|
           Flight.new(game) { [game.players[index].identifier, :flight] }
@@ -17,7 +18,7 @@ module ThreeDragonAnte
         @stakes = Evented::Integer.new(game) { [_1, :stakes, _2] }
       end
       attr_reader :game, :rounds
-      attr_reader :ante, :leader, :flights, :stakes
+      attr_reader :leader, :flights, :stakes
 
       def ended?
         current_phase.first != :ante && (stakes.value.zero? || !winner.nil?)
@@ -25,6 +26,10 @@ module ThreeDragonAnte
 
       def stakes_distributed?
         current_phase == :stakes_distributed
+      end
+
+      def ante
+        @ante_cards
       end
 
       def players
@@ -46,6 +51,7 @@ module ThreeDragonAnte
         players.each do |player|
           player.generate_choice_from_hand(prompt: :for_ante) do |choice|
             @ante << PlayerAnte.new(player, player.hand >> choice)
+            @ante_cards << choice
           end
         end
       end
