@@ -35,7 +35,7 @@ RSpec.describe ThreeDragonAnte::Card::GoldDragon do
       let(:game) { Factory.game(setup_until: [:gambit, 1, :round, 2, :aleph], stacked_deck: stacked_deck) }
 
       it 'should draw 2 cards' do
-        gambit.current_round.run
+        gambit.current_round.current_player_takes_turn
         expect(game.players[0].current_choice.choices.first).to be_a ThreeDragonAnte::Card::GoldDragon
 
         current_hand_size = game.players[0].hand.size

@@ -5,6 +5,7 @@ module ThreeDragonAnte
         def initialize(gambit, leader)
           @game = gambit.game
           @gambit = gambit
+          @leader = leader
           @cards_played = []
 
           player_order = game.players.values.dup
@@ -31,7 +32,9 @@ module ThreeDragonAnte
           current_player.generate_choice_from_hand(prompt: :play_card) do |choice|
             @cards_played << PlayerChoice.new(current_player, current_player.hand >> choice)
             gambit.flights[current_player] << choice
-            choice.trigger_power!(gambit, current_player) if choice.strength > @last_played_strength
+            if current_player == @leader || choice.strength <= @last_played_strength
+              choice.trigger_power!(gambit, current_player)
+            end
 
             if ThreeDragonAnte::Card::CopperDragon === choice
               @last_played_strength = gambit.flights[current_player].values.last.strength
@@ -52,7 +55,7 @@ module ThreeDragonAnte
 
         def advance
           next_player
-          run
+          current_player_takes_turn
         end
 
         # new players join to the left of the last

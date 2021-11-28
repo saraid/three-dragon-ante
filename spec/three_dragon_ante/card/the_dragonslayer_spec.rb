@@ -12,7 +12,7 @@ RSpec.describe ThreeDragonAnte::Card::TheDragonslayer do
 
   context 'when triggered' do
     it 'slays any weaker dragon' do
-      gambit.current_round.run
+      gambit.current_round.current_player_takes_turn
       expect(game.players[1].current_choice.choices.first).to be_a ThreeDragonAnte::Card::TheDragonslayer
 
       game.players[1].current_choice.choose! 0 # play TheDragonslayer

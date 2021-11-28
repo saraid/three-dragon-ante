@@ -6,7 +6,7 @@ RSpec.describe ThreeDragonAnte::Game::Gambit::Round do
   let(:gambit) { game.current_gambit}
   subject { gambit.current_round }
 
-  describe '#run' do
+  describe '#current_player_takes_turn' do
     it do
       subject.current_player.current_choice.choose! 0
       game.current_choices.values.each {  _1.choose!(0) } until game.current_choices.empty?

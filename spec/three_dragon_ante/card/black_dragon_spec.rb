@@ -11,7 +11,7 @@ RSpec.describe ThreeDragonAnte::Card::BlackDragon do
 
   context 'when triggered' do
     it 'should steal 2 gold from the stakes' do
-      gambit.current_round.run
+      gambit.current_round.current_player_takes_turn
       expect(game.players.first.current_choice.choices.first).to be_a ThreeDragonAnte::Card::BlackDragon
 
       current_stakes = gambit.stakes.value
@@ -21,7 +21,7 @@ RSpec.describe ThreeDragonAnte::Card::BlackDragon do
 
     context 'when there is only 1 gold in the stakes' do
       it 'should steal 1 gold and end the gambit' do
-        gambit.current_round.run
+        gambit.current_round.current_player_takes_turn
         expect(game.players.first.current_choice.choices.first).to be_a ThreeDragonAnte::Card::BlackDragon
 
         gambit.stakes.lose(gambit.stakes.value - 1)

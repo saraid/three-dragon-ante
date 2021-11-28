@@ -21,7 +21,7 @@ module Factory
       end
 
       round_actions = [
-        proc { game.current_gambit.current_round.run },
+        proc { game.current_gambit.current_round.current_player_takes_turn },
         proc { game.current_gambit.current_round.current_player.current_choice.choose!(0) },
         proc do
           game.current_choices.values.each do

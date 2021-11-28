@@ -12,7 +12,7 @@ RSpec.describe ThreeDragonAnte::Card::Dracolich do
 
   context 'when triggered' do
     it 'copies the power of an evil dragon in any flight' do
-      gambit.current_round.run
+      gambit.current_round.current_player_takes_turn
       expect(game.players[1].current_choice.choices.first).to be_a ThreeDragonAnte::Card::Dracolich
 
       game.players[1].current_choice.choose! 0 # play Dragolich

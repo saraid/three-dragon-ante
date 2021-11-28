@@ -17,7 +17,7 @@ RSpec.describe ThreeDragonAnte::Card::BrassDragon do
     let(:player) { game.players[2] }
 
     before(:each) do
-      gambit.current_round.run
+      gambit.current_round.current_player_takes_turn
       player.current_choice.choose! 0 # play BrassDragon
     end
 

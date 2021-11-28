@@ -10,7 +10,7 @@ RSpec.describe ThreeDragonAnte::Card::TheFool do
   let(:game) { Factory.game(setup_until: target_phase, stacked_deck: stacked_deck) }
   let(:gambit) { game.current_gambit }
 
-  before(:each) { gambit.current_round.run }
+  before(:each) { gambit.current_round.current_player_takes_turn }
 
   context 'when triggered' do
     context 'as the first card played' do
@@ -36,8 +36,8 @@ RSpec.describe ThreeDragonAnte::Card::TheFool do
         # Then bet/gimel will lead and play whatever.
         # Then aleph will play the fool
         { type: ThreeDragonAnte::Card::TheFool },
-        { no_manip: %i(hands), strength: cmp(:<, 3) }, # guarantee Fool power will trigger
-        { no_manip: %i(hands), strength: cmp(:<, 3) }, # guarantee Fool power will trigger
+        { no_manip: %i(hands), strength: cmp(:>, 3) }, # guarantee Fool power will trigger
+        { no_manip: %i(hands), strength: cmp(:>, 3) }, # guarantee Fool power will trigger
       ] end
 
       it 'should draw cards for each player with a stronger flight' do

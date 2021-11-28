@@ -19,7 +19,7 @@ RSpec.describe ThreeDragonAnte::Card::BlueDragon do
 
     context 'and the player chooses to steal from stakes' do
       before(:each) do
-        gambit.current_round.run if target_phase[3] == 2
+        gambit.current_round.current_player_takes_turn if target_phase[3] == 2
         game.players[0].current_choice.choose! 0 # play BlueDragon
       end
 
@@ -58,7 +58,7 @@ RSpec.describe ThreeDragonAnte::Card::BlueDragon do
 
     context 'and the player chooses to make players pay to stakes' do
       before(:each) do
-        gambit.current_round.run if target_phase[3] == 2
+        gambit.current_round.current_player_takes_turn if target_phase[3] == 2
         game.players[0].current_choice.choose! 0 # play BlueDragon
       end
 
