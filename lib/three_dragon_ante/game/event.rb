@@ -3,12 +3,14 @@ Dir.each_child(File.join(__dir__, 'evented')) do |evented|
   require_relative "evented/#{evented}"
 end
 
+require_relative 'event/phase'
+
 module ThreeDragonAnte
   class Game
     class Event
       def initialize(game, phase, details)
         @game = game
-        @phase, @details = phase, details
+        @phase, @details = Phase.from_array(phase), details
       end
       attr_reader :game
       attr_reader :phase, :details
