@@ -4,7 +4,7 @@ Three Dragon Ante is a card game developed by Wizards of the Coast. It is meant 
 
 This gem is a fun exercise for myself where I'm encoding all the rules. I may extend it to provide a server and client, too, if I become so inclined.
 
-The rules can be found at [https://www.wizards.com/dnd/files/ThreeAnte_rulebook.zip](https://www.wizards.com/dnd/files/ThreeAnte_rulebook.zip) and some mre context on [Board Game Geek](https://boardgamegeek.com/boardgame/20806/three-dragon-ante).
+The rules can be found at [https://www.wizards.com/dnd/files/ThreeAnte_rulebook.zip](https://www.wizards.com/dnd/files/ThreeAnte_rulebook.zip) and some more context on [Board Game Geek](https://boardgamegeek.com/boardgame/20806/three-dragon-ante).
 
 My original, 2009, implementation can be found at [https://github.com/saraid/tda-server](https://github.com/saraid/tda-server).
 
@@ -46,18 +46,20 @@ game.current_gambit.choose_leader
 game.current_gambit.pay_stakes
 ```
 
-Rounds:
+- Rounds:
 ```ruby
 game.players.size.times do
   game.current_gambit.current_round.current_player_takes_turn
 end
 ```
 
-Cleanup:
+- Cleanup:
 ```ruby
 game.current_gambit.distribute_stakes
 game.current_gambit.cleanup
 ```
+
+### Player Action
 
 Player action is handled by an object called a `Game::Player::Choice`
 
@@ -78,6 +80,20 @@ The oldest pending choice for all players is exposed at:
 ```ruby
 game.current_choices
 ```
+
+### Server-GameEngine interoperation
+
+The main way in which the game engine informs the server is through a ListenableArray.
+
+```ruby
+game.events.on_event do |event|
+  do_stuff(event)
+end
+```
+
+Events come with a `phase` and a `details`.
+
+TODO: Still being formalized.
 
 ## Contributing
 
