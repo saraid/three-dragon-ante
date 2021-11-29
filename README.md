@@ -1,38 +1,87 @@
-# Three::Dragon::Ante
+# ThreeDragonAnte
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/three/dragon/ante`. To experiment with that code, run `bin/console` for an interactive prompt.
+Three Dragon Ante is a card game developed by Wizards of the Coast. It is meant to be a game thematic to D&D worlds that D&D characters can play.
 
-TODO: Delete this and the text above, and describe your gem
+This gem is a fun exercise for myself where I'm encoding all the rules. I may extend it to provide a server and client, too, if I become so inclined.
 
-## Installation
+The rules can be found at [https://www.wizards.com/dnd/files/ThreeAnte_rulebook.zip](https://www.wizards.com/dnd/files/ThreeAnte_rulebook.zip) and some mre context on [Board Game Geek](https://boardgamegeek.com/boardgame/20806/three-dragon-ante).
 
-Add this line to your application's Gemfile:
+My original, 2009, implementation can be found at [https://github.com/saraid/tda-server](https://github.com/saraid/tda-server).
 
-```ruby
-gem 'three-dragon-ante'
-```
-
-And then execute:
-
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install three-dragon-ante
+I do not own Three Dragon Ante™.
 
 ## Usage
 
-TODO: Write usage instructions here
+This codebase is designed to inter-operate with an unwritten server.
 
-## Development
+```ruby
+include ThreeDragonAnte
+game = Game.new
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+Add players to the game.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```ruby
+game.players << Game::Player.new
+game.players << Game::Player.new
+game.players << Game::Player.new
+
+# Remove players from the game.
+game.players >> player
+```
+
+Initialize the game by distributing starting gold and hands.
+```ruby
+game.setup!
+```
+TODO: Change it so that newly joining players also receive setup.
+
+Gambits come in three phases:
+- Ante:
+```ruby
+game.current_gambit.accept_ante
+game.players.each { _1.current_choice.choose!(0) }
+game.current_gambit.reveal_ante 
+game.current_gambit.choose_leader
+game.current_gambit.pay_stakes
+```
+
+Rounds:
+```ruby
+game.players.size.times do
+  game.current_gambit.current_round.current_player_takes_turn
+end
+```
+
+Cleanup:
+```ruby
+game.current_gambit.distribute_stakes
+game.current_gambit.cleanup
+```
+
+Player action is handled by an object called a `Game::Player::Choice`
+
+A choice object has three salient methods:
+- `prompt` is a key that explains the purpose of the choice.
+- `choices` enumerates the possible options.
+- `choose!` takes either an index of `choices` or one of the entries themselves and marks the choice as resolved.
+```ruby
+player = game.players[0]
+player.current_choice.prompt
+player.current_choice.choices
+player.current_choice.choose! 0
+```
+
+It is possible for choices to be queued up such that a resolved choice is immediately followed by another choice.
+
+The oldest pending choice for all players is exposed at:
+```ruby
+game.current_choices
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/three-dragon-ante.
+Bug reports and pull requests are welcome on GitHub at https://github.com/saraid/three-dragon-ante.
 
 
 ## License
