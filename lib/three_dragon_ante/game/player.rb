@@ -34,20 +34,20 @@ module ThreeDragonAnte
 
       def generate_choice_from_hand(prompt:, only: :itself.to_proc, &block)
         on_choice = proc do |choice|
-          @game << [:choose, self, choice]
+          @game << Event::ChoiceMade[choice, by: self]
           block.call(choice)
         end
 
-        @game << [identifier, :choice, @choices << Choice.new(prompt, @hand.values.select(&only), &on_choice), @choices.size]
+        @game << Event::ChoiceOffered[@choices << Choice.new(prompt, @hand.values.select(&only), &on_choice), to: self]
       end
 
       def choose_one(*choices, prompt: :choose_one, &block)
         on_choice = proc do |choice|
-          @game << [:choose, self, choice]
+          @game << Event::ChoiceMade[choice, by: self]
           block.call(choice)
         end
 
-        @game << [identifier, :choice, @choices << Choice.new(prompt, choices, &on_choice), @choices.size]
+        @game << Event::ChoiceOffered[@choices << Choice.new(prompt, choices, &on_choice), to: self]
       end
 
       def draw_card!(deck = game.deck)

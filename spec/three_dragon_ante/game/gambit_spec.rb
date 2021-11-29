@@ -36,7 +36,7 @@ RSpec.describe ThreeDragonAnte::Game::Gambit do
     it 'works' do
       subject.reveal_ante
 
-      expect(game.events.last.details.size).to eq(game.players.size)
+      expect(game.events.last.details.ante.size).to eq(game.players.size)
     end
   end
 

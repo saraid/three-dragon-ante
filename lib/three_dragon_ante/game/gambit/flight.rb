@@ -5,7 +5,7 @@ module ThreeDragonAnte
         def check_special_flight_completion!(gambit, player)
           @special_completed ||= { color: [], strength: [] }
           if color = (color_flights.keys - @special_completed[:color]).first
-            game << [player, :color_flight, color_flights[color]]
+            game << Event::SpecialFlightCompleted[player, :color_flight, color_flights[color]]
             @special_completed[:color] = true
             gambit.players.except(player).each do |opponent|
               cash = color_flights[color][1].strength
@@ -13,7 +13,7 @@ module ThreeDragonAnte
             end
           end
           if strength_value = (strength_flights.keys - @special_completed[:strength]).first
-            game << [player, :strength_flight, strength_flights[strength_value]]
+            game << Event::SpecialFlightCompleted[player, :strength_flight, strength_flights[strength_value]]
             @special_completed[:strength] = true
             player.hoard.gain(gambit.stakes.lose(strength_value))
             2.times do

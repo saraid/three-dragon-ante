@@ -66,7 +66,7 @@ module ThreeDragonAnte
 
       def reveal_ante
         @current_phase = [:ante, :reveal]
-        game << @ante.map(&:card)
+        game << Event::AnteRevealed[@ante]
       end
 
       def temporary_leader=(player)
@@ -81,11 +81,11 @@ module ThreeDragonAnte
           players_at_strength = by_strength[strength].map(&:player)
           if players_at_strength.size == 1
             @leader = players_at_strength.first
-            game << [:leader, @leader]
+            game << Event::LeaderChosen[@leader]
 
             break
           else
-            game << [:tied, players_at_strength]
+            game << Event::AnteTied.new
           end
         end
       end

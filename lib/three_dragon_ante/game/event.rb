@@ -4,6 +4,7 @@ Dir.each_child(File.join(__dir__, 'evented')) do |evented|
 end
 
 require_relative 'event/phase'
+require_relative 'event/details'
 
 module ThreeDragonAnte
   class Game
