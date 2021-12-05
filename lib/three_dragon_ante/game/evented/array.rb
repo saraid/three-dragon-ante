@@ -22,6 +22,12 @@ module ThreeDragonAnte
           @describer.call(operation, other)
         end
 
+        def dup
+          self.class.new(game, &@describer).tap do |duped|
+            duped.instance_variable_set(:@values, @values.dup)
+          end
+        end
+
         def <<(other)
           game << describe(:gain, other)
           @values << other

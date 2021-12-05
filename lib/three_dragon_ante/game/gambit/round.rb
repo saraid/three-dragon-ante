@@ -8,7 +8,7 @@ module ThreeDragonAnte
           @leader = leader
           @cards_played = []
 
-          player_order = game.players.values.dup
+          player_order = gambit.players.values.dup
           player_order.rotate! until player_order.first == leader
           @player_order = player_order.to_enum
 
@@ -23,7 +23,7 @@ module ThreeDragonAnte
         end
 
         def ended?
-          @cards_played.size == game.players.size
+          @cards_played.size == gambit.players.size
         end
 
         def current_player_takes_turn
@@ -65,7 +65,7 @@ module ThreeDragonAnte
         end
 
         def players_leftward_from_current
-          player_order = game.players.values.dup
+          player_order = gambit.players.values.dup
           player_order.rotate! until player_order.first == @current_player
           player_order
         end

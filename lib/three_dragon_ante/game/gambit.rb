@@ -11,8 +11,8 @@ module ThreeDragonAnte
         @ante = []
         @ante_cards = Evented::SetOfCards.new(game) { [:ante] }
         @rounds = []
-        @flights = game.players.zip([]).to_h.transform_values.with_index do |_value, index|
-          Flight.new(game) { [game.players[index].identifier, :flight] }
+        @flights = players.zip([]).to_h.transform_values.with_index do |_value, index|
+          Flight.new(game) { [players[index].identifier, :flight] }
         end
 
         @stakes = Evented::Integer.new(game) { [_1, :stakes, _2] }
@@ -33,7 +33,7 @@ module ThreeDragonAnte
       end
 
       def players
-        game.players
+        @players ||= game.players.dup
       end
 
       def run
@@ -92,7 +92,7 @@ module ThreeDragonAnte
 
       def pay_stakes
         @current_phase = [:ante, :pay_stakes]
-        game.players.each do
+        players.each do
           cash = _1.hoard.lose @per_player_stakes 
           stakes.gain cash
         end
@@ -137,8 +137,8 @@ module ThreeDragonAnte
         ante.each { game.deck.discarded _1 }
         flights.each { _2.each { |card| game.deck.discarded card } }
 
-        game.players.each do |player|
-          game.players >> player if player.hoard.value <= 0
+        players.each do |player|
+          players >> player if player.hoard.value <= 0
           2.times { player.draw_card! }
         end
 
