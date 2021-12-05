@@ -12,6 +12,7 @@ end
 
 require_relative './array_changed'
 require_relative './ante_changed'
+require_relative './game_players_changed'
 require_relative './player_flight_changed'
 require_relative './player_hand_changed'
 require_relative './player_hoard_debts_changed'

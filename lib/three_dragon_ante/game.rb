@@ -13,7 +13,7 @@ module ThreeDragonAnte
     def initialize
       @current_phase = :waiting_for_players
       @deck = Deck.new
-      @players = Evented::Array.new(self)
+      @players = Evented::Array.new(self, &Event::GamePlayersChanged.method(:[]))
       @events = ListenableArray.new
       @event_logger = Logger.new($stdout)
       @gambits = []
