@@ -15,6 +15,7 @@ module ThreeDragonAnte
         cards_to_take.times.each do |i|
           remaining_cards_to_take = cards_to_take - i
           puts "Remaining to take: #{remaining_cards_to_take}"
+          break if gambit.ante.empty?
 
           by_strength = gambit.ante.group_by(&:strength)
           strength = by_strength.keys.sort.first
