@@ -18,8 +18,9 @@ module ThreeDragonAnte
         attr_reader :values
 
         def describe(operation, other)
-          raise NotImplementedError unless @describer
-          @describer.call(operation, other)
+          if @describer then @describer.call(operation, other)
+          else Event::ArrayChanged[operation, other]
+          end
         end
 
         def dup

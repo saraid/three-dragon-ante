@@ -16,8 +16,9 @@ module ThreeDragonAnte
         attr_reader :value
 
         def describe(operation, other)
-          raise NotImplementedError unless @describer
-          @describer.call(operation, other).concat([:new_value, @value])
+          if @describer then @describer.call(operation, other, @value)
+          else Event::IntegerChanged[operation, other, @value]
+          end
         end
 
         def gain(other)

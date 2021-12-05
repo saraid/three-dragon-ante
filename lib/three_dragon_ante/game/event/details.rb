@@ -10,6 +10,16 @@ module ThreeDragonAnte
   end
 end
 
+require_relative './array_changed'
+require_relative './ante_changed'
+require_relative './player_flight_changed'
+require_relative './player_hand_changed'
+require_relative './player_hoard_debts_changed'
+
+require_relative './integer_changed'
+require_relative './player_hoard_changed'
+require_relative './gambit_stakes_changed'
+
 require_relative './ante_revealed'
 require_relative './ante_tied'
 require_relative './choice_made'

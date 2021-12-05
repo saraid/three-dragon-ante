@@ -9,13 +9,13 @@ module ThreeDragonAnte
         @game = game
         @current_phase = [:ante, :choice]
         @ante = []
-        @ante_cards = Evented::SetOfCards.new(game) { [:ante] }
+        @ante_cards = Evented::SetOfCards.new(game, &Event::AnteChanged.method(:[]))
         @rounds = []
-        @flights = players.zip([]).to_h.transform_values.with_index do |_value, index|
-          Flight.new(game) { [players[index].identifier, :flight] }
+        @flights = players.zip(players).to_h.transform_values do |player|
+          Flight.new(game, &Event::PlayerFlightChanged[player])
         end
 
-        @stakes = Evented::Integer.new(game) { [_1, :stakes, _2] }
+        @stakes = Evented::Integer.new(game, &Event::GambitStakesChanged.method(:[]))
       end
       attr_reader :game, :rounds
       attr_reader :leader, :flights, :stakes

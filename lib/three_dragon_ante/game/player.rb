@@ -13,7 +13,7 @@ module ThreeDragonAnte
       def initialize(game)
         @game = game
         @hoard = Hoard.new(game, self)
-        @hand = Evented::SetOfCards.new(game) { [:player_hand, identifier] }
+        @hand = Evented::SetOfCards.new(game, &Event::PlayerHandChanged[self])
         @choices = Choice::Array.new
       end
       attr_reader :game
@@ -21,7 +21,11 @@ module ThreeDragonAnte
       attr_reader :hoard, :hand
 
       def identifier
-        @identifier || object_id # TODO
+        @identifier ||=
+          begin
+            require 'securerandom'
+            SecureRandom.hex(6).to_sym
+          end
       end
 
       def current_choice

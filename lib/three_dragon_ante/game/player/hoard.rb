@@ -4,10 +4,10 @@ module ThreeDragonAnte
   class Game
     class Player
       class Hoard < Evented::Integer
-        def initialize(game, player, &block)
-          super(game) { [player, _1, :hoard, _2] }
+        def initialize(game, player)
+          super(game, &Event::PlayerHoardChanged[player])
           @game = game
-          @debts = Evented::Array.new(game) { [player, :debts, _1, _2] }
+          @debts = Evented::Array.new(game, &Event::PlayerHoardDebtsChanged[player])
         end
         attr_reader :debts
 

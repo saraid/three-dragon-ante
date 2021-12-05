@@ -4,12 +4,6 @@ module ThreeDragonAnte
       class SetOfCards < Array
         include Refinements::Inspection
 
-        def describe(operation, other)
-          raise TypeError unless Card === other
-          context = @describer.call if @describer
-          [*context, operation, other]
-        end
-
         def inspectable_attributes
           %i( values )
         end

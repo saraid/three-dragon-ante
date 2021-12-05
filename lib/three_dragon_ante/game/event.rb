@@ -1,10 +1,10 @@
+require_relative 'event/phase'
+require_relative 'event/details'
+
 Dir.each_child(File.join(__dir__, 'evented')) do |evented|
   next unless evented.end_with?('.rb')
   require_relative "evented/#{evented}"
 end
-
-require_relative 'event/phase'
-require_relative 'event/details'
 
 module ThreeDragonAnte
   class Game
