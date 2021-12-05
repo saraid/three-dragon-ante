@@ -9,7 +9,7 @@ module ThreeDragonAnte
         attr_reader :player, :choice, :choices_pending
 
         def inspect
-          [player.identifier, :offered_choice, choice, choices_pending].inspect
+          [player.identifier, :offered_choice, choice, :pending, choices_pending].inspect
         end
       end
     end

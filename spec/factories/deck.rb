@@ -12,12 +12,11 @@ module Factory
   end
 
   def self.flights(player_order: PLAYER_IDENTIFIERS[0...3], flights:, stack_hands: false)
-    if stack_hands
-      flights.values.each do |flight|
-        ante = 1
-        (ThreeDragonAnte::Game::Player::STARTING_HAND_SIZE - flight.size - ante).times do
-          flight << { no_manip: %i(hands) }
-        end
+    stack_hand_to = stack_hands ? ThreeDragonAnte::Game::Player::STARTING_HAND_SIZE : flights.max_by(&:size).size
+    flights.values.each do |flight|
+      ante = 1
+      (ThreeDragonAnte::Game::Player::STARTING_HAND_SIZE - flight.size - ante).times do
+        flight << { no_manip: %i(hands) }
       end
     end
     head_flight, *rest_flights = flights.values_at(*player_order)

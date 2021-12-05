@@ -12,7 +12,7 @@ Current Items:
   - Some tests will unreliably fail somewhat inexplicably. This is almost certainly because the deck wasn't stacked correctly enough to prepare for the situation being tested.
   - A more intelligent chooser in the test harness would also help prevent unrealistic player behaviors being tested. OTOH, no player behaviors are unrealistic in a system as simple as this.
 - [x] Finish formalizing Event architecture: Evented::Array and Evented::Integer need to emit real Event::Details rather than generic willy-nilly arrays of arbitrary shape.
-- [ ] Probably convert Princess code to offer a succession of choices rather than a single ordering choice.
+- [x] Probably convert Princess code to offer a succession of choices rather than a single ordering choice.
 - [ ] Handle player presence a bit better
   - New players join in at the next gambit
   - Dropped players should be flagged inactive and skipped

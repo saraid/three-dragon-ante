@@ -141,7 +141,6 @@ module ThreeDragonAnte
           players >> player if player.hoard.value <= 0
           2.times { player.draw_card! }
         end
-
       end
     end
   end

@@ -11,13 +11,16 @@ module ThreeDragonAnte
         cash = player.hoard.lose 1
         gambit.stakes.gain cash
 
-        options = gambit.flights[player].values.select(&:good_dragon?).yield_self do |flight|
-          flight.permutation(flight.size)
+        choose_option = lambda do |remaining_options|
+          player.choose_one(*remaining_options) do |choice|
+            choice.each { _1.trigger_power!(gambit, player) }
+            remaining_options.delete(choice)
+            choose_option.call(remaining_options) if remaining_options.any?
+          end
         end
 
-        player.choose_one(*options) do |choice|
-          choice.each { _1.trigger_power!(gambit, player) }
-        end
+        options = gambit.flights[player].values.select(&:good_dragon?)
+        choose_option.call(options) if options.any?
       end
     end
   end
