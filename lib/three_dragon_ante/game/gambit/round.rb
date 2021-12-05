@@ -34,6 +34,8 @@ module ThreeDragonAnte
             gambit.flights[current_player] << choice
             if current_player == @leader || choice.strength <= @last_played_strength
               choice.trigger_power!(gambit, current_player)
+            else
+              game.event_logger.debug('Power was not triggerd.')
             end
 
             if ThreeDragonAnte::Card::CopperDragon === choice

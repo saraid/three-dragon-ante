@@ -19,7 +19,7 @@ module ThreeDragonAnte
       @gambits = []
     end
     attr_reader :deck, :players
-    attr_reader :events
+    attr_reader :events, :event_logger
 
     def setup!
       @current_phase = :setup

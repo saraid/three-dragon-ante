@@ -14,12 +14,12 @@ module ThreeDragonAnte
         gambit.stakes.gain cash
 
         options = gambit.flights.map do |player, flight|
-          flight.values.map { |card| [player, card] if card.dragon? }.compact
+          flight.values.map { |card| [player, card] if card.dragon? && card.strength < strength }.compact
         end.flatten(1)
 
         player.choose_one(*options, prompt: :slay) do |choice|
           owner, dragon = choice
-          gambit.flights[owner] >> dragon
+          gambit.game.deck.discarded(gambit.flights[owner] >> dragon)
         end
       end
     end
